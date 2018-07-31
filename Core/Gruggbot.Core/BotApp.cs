@@ -1,4 +1,4 @@
-﻿ using Discord;
+﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Gruggbot.Core.CommandModules;
@@ -9,10 +9,16 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Gruggbot.Core
 {
+    /// <summary>
+    /// Primary Class that Executes the Discord Bot. Call 
+    /// </summary>
     public class BotApp
     {
+        private const char PREFIX = '~';
+
         private IConfigurationRoot _configuration;
         private ILogger<BotApp> _logger;
         private IServiceProvider _serviceProvider;
@@ -44,9 +50,12 @@ namespace Gruggbot.Core
         private async Task InstallCommands()
         {
             _discordClient.MessageReceived += HandleCommand;
-
+            _commands.Log += Log;
             //Add Modules
             await _commands.AddModuleAsync<InfoCommandModule>();
+            await _commands.AddModuleAsync<FunStuffModule>();
+            await _commands.AddModuleAsync<WarcraftModule>();
+
         }
 
         private async Task HandleCommand(SocketMessage msg)
@@ -60,7 +69,10 @@ namespace Gruggbot.Core
             //First character of command after prefix
             int argPos = 0;
 
-            if (!(message.HasCharPrefix('!', ref argPos) || !message.HasMentionPrefix(_discordClient.CurrentUser, ref argPos)))
+            bool hasPrefix = message.HasCharPrefix(PREFIX, ref argPos);
+            bool hasMentionPrefix = message.HasMentionPrefix(_discordClient.CurrentUser, ref argPos);
+
+            if (!hasPrefix && !hasMentionPrefix)
                 return;
 
             //Create Command Context

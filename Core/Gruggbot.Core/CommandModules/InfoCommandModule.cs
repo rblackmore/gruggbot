@@ -6,8 +6,15 @@ using System.Threading.Tasks;
 
 namespace Gruggbot.Core.CommandModules
 {
+    [Group("info")]
     public class InfoCommandModule : ModuleBase
     {
+        [Command]
+        public async Task Default()
+        {
+            await ReplyAsync("Hello, my name is Gruggbot");
+        }
+
         [Command("say"), Summary("Echos a message.")]
         public async Task Say([Remainder, Summary("The text to echo")] string echo)
         {
@@ -21,5 +28,7 @@ namespace Gruggbot.Core.CommandModules
             var userInfo = user ?? Context.Client.CurrentUser;
             await ReplyAsync($"{userInfo.Username}#{userInfo.Discriminator}");
         }
+
+        
     }
 }

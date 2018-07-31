@@ -1,6 +1,6 @@
 ﻿using Discord;
 using Gruggbot.Core;
-using Gruggbot.Core.Configuration;
+using Gruggbot.Core.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -35,8 +35,10 @@ namespace ConsoleTest
 
         private Task ConfigureServices(IServiceCollection services)            
         {
+
             IConfigurationRoot configurationRoot = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
+                .AddEnvironmentVariables()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
 
