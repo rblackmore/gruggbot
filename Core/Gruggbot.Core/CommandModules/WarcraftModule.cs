@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gruggbot.Core.CommandModules
 {
+    [Summary("Warcraft")]
     public class WarcraftModule : ModuleBase
     {
         private readonly DateTime releaseUTC = new DateTime(2018, 8, 13, 22, 00, 00, DateTimeKind.Utc);

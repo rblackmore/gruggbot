@@ -11,9 +11,9 @@ using System.Linq;
 
 namespace Gruggbot.Core.CommandModules
 {
+    [Summary("Random fun commands to play with")]
     public class FunStuffModule : ModuleBase
     {
-
         private readonly ImgurClient _imgurClient;
 
         public FunStuffModule(ImgurClient imgurClient)
@@ -21,13 +21,29 @@ namespace Gruggbot.Core.CommandModules
             _imgurClient = imgurClient;
         }
 
-        [Command("pug", RunMode = RunMode.Async)]
-        public async Task PugAsync(int count = 1)
+        [Command("say"), Summary("Echos a message.")]
+        public async Task Say([Remainder, Summary("The text to echo")] string echo)
         {
-            await Pugs(count);
+            await ReplyAsync(echo);
         }
 
-        private async Task Pugs(int count = 1)
+        [Command("8ball", RunMode = RunMode.Async), Summary("Ask a question, get an answer")]
+        [RequireOwner]
+        [Hidden]
+        public async Task EightBall([Remainder(), Summary("the Question to answer")]string question)
+        {
+
+        }
+
+        [Command("hjälp", RunMode = RunMode.Async), Summary("no hablar español")]
+        [Hidden]
+        public async Task HjalpCmd()
+        {
+            await ReplyAsync("No Hablar Español");
+        }
+
+        [Command("pug", RunMode = RunMode.Async)]
+        public async Task PugAsync(int count = 1)
         {
             Random rando = new Random();
             int page = rando.Next(0, 100);
@@ -76,7 +92,9 @@ namespace Gruggbot.Core.CommandModules
 
                 imageList.RemoveAt(next);
                 next = rando.Next(0, imageList.Count - 1);
+
             }
+
         }
     }
 }

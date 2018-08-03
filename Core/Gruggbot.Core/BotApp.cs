@@ -32,11 +32,13 @@ namespace Gruggbot.Core
             _serviceProvider = serviceProvider;
             _discordClient = discordClient;
             _commands = new CommandService();
+
         }
 
         public async Task Run()
         {
             _discordClient.Log += Log;
+            _discordClient.Connected += Client_Connected;
 
             await InstallCommands();
 
@@ -47,15 +49,21 @@ namespace Gruggbot.Core
             await Task.Delay(-1);
         }
 
+        private Task Client_Connected()
+        {
+            _logger.LogInformation($"Connected as {_discordClient.CurrentUser.Username}");
+            return Task.CompletedTask;
+        }
+
         private async Task InstallCommands()
         {
             _discordClient.MessageReceived += HandleCommand;
             _commands.Log += Log;
             //Add Modules
+            await _commands.AddModuleAsync<HelpModule>();
             await _commands.AddModuleAsync<InfoCommandModule>();
             await _commands.AddModuleAsync<FunStuffModule>();
             await _commands.AddModuleAsync<WarcraftModule>();
-
         }
 
         private async Task HandleCommand(SocketMessage msg)
