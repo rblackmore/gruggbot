@@ -1,5 +1,6 @@
 ﻿using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,7 +31,7 @@ namespace Gruggbot.Core
         private void Setup()
         {
             _discordClient.MessageReceived += ShenanigansResponse;
-            _logger.LogInformation($"RandomMessages Initiated");
+            Log.Information($"RandomMessages Initiated");
         }
 
         public async Task ShenanigansResponse(SocketMessage message)
@@ -45,7 +46,7 @@ namespace Gruggbot.Core
             if (execute > _chance)
             {
                 _chance += CHANCEINCREMENT;
-                _logger.LogInformation($"Chance increased to {_chance}");
+                Log.Information($"Chance increased to {_chance}");
                 return;
             }
 

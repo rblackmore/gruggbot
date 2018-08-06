@@ -9,7 +9,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-
+using Serilog;
+using Serilog.Sinks.SystemConsole;
+using Serilog.Sinks.File;
+using Serilog.Events;
 
 namespace Gruggbot.Core
 {
@@ -19,6 +22,7 @@ namespace Gruggbot.Core
     public class BotApp
     {
         private const char PREFIX = '~';
+        private const string LOGPATH = "logs\\bot.log";
 
         private IConfigurationRoot _configuration;
         private ILogger<BotApp> _logger;
@@ -34,18 +38,18 @@ namespace Gruggbot.Core
             _serviceProvider = serviceProvider;
             _discordClient = discordClient;
             _commands = new CommandService();
+            ConfigureLogging();
 
         }
 
         public async Task Run()
         {
-            _discordClient.Log += Log;
+            _discordClient.Log += DiscordLogEvent;
             _discordClient.Connected += Client_Connected;
 
             _randomMessages = _serviceProvider.GetService<RandomMessages>();
 
             await InstallCommands();
-            //InstallRandomResponseMessages();
 
             string token = _configuration.GetSection("Token").Value;
             await _discordClient.LoginAsync(TokenType.Bot, token);
@@ -54,16 +58,26 @@ namespace Gruggbot.Core
             await Task.Delay(-1);
         }
 
+        private void ConfigureLogging()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
+                .WriteTo.File(LOGPATH, rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+        }
+
+
         private Task Client_Connected()
         {
-            _logger.LogInformation($"Connected as {_discordClient.CurrentUser.Username}");
+            Log.Information($"Connected as {_discordClient.CurrentUser.Username}");
             return Task.CompletedTask;
         }
 
         private async Task InstallCommands()
         {
             _discordClient.MessageReceived += HandleCommand;
-            _commands.Log += Log;
+            _commands.Log += DiscordLogEvent;
             
             //Add Modules
             await _commands.AddModuleAsync<HelpModule>();
@@ -115,12 +129,13 @@ namespace Gruggbot.Core
             var result = await _commands.ExecuteAsync(context, argPos, _serviceProvider);
 
             if (!result.IsSuccess)
-                _logger.LogError("{@error} {@message}", result.ErrorReason, message.Content);
+                Log.Error("{@error} {@message}", result.ErrorReason, message.Content);
         }
 
-        private Task Log(LogMessage msg)
+        private Task DiscordLogEvent(LogMessage msg)
         {
-            _logger.LogInformation("{0}", msg.ToString());
+            //_logger.LogInformation("{0}", msg.ToString());
+            Log.Information(msg.ToString());
             return Task.CompletedTask;
         }
     }

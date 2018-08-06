@@ -53,6 +53,10 @@ namespace GruggbotEntry
 
             services.AddSingleton<IConfigurationRoot>(await GetConfiguration());
 
+            //Configure Serilog
+
+
+            //Configure Microsoft Logging
             services.AddSingleton(new LoggerFactory()
                 .AddConsole()
                 .AddDebug());
