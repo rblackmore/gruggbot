@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace Gruggbot.Core
@@ -24,6 +25,7 @@ namespace Gruggbot.Core
         private IServiceProvider _serviceProvider;
         private DiscordSocketClient _discordClient;
         private CommandService _commands;
+        private RandomMessages _randomMessages;
 
         public BotApp(ILogger<BotApp> logger, IConfigurationRoot configuration, DiscordSocketClient discordClient, IServiceProvider serviceProvider)
         {
@@ -40,7 +42,10 @@ namespace Gruggbot.Core
             _discordClient.Log += Log;
             _discordClient.Connected += Client_Connected;
 
+            _randomMessages = _serviceProvider.GetService<RandomMessages>();
+
             await InstallCommands();
+            //InstallRandomResponseMessages();
 
             string token = _configuration.GetSection("Token").Value;
             await _discordClient.LoginAsync(TokenType.Bot, token);
@@ -59,6 +64,7 @@ namespace Gruggbot.Core
         {
             _discordClient.MessageReceived += HandleCommand;
             _commands.Log += Log;
+            
             //Add Modules
             await _commands.AddModuleAsync<HelpModule>();
             await _commands.AddModuleAsync<InfoCommandModule>();
@@ -66,21 +72,39 @@ namespace Gruggbot.Core
             await _commands.AddModuleAsync<WarcraftModule>();
         }
 
-        private async Task HandleCommand(SocketMessage msg)
+        internal bool HasPrefix(SocketUserMessage msg, out int argPos)
         {
-            if (!(msg is SocketUserMessage message))
-                return;
-
-            if (message.Author.IsBot)
-                return;
-
             //First character of command after prefix
-            int argPos = 0;
+            argPos = 0;
 
-            bool hasPrefix = message.HasCharPrefix(PREFIX, ref argPos);
-            bool hasMentionPrefix = message.HasMentionPrefix(_discordClient.CurrentUser, ref argPos);
+            bool hasPrefix = msg.HasCharPrefix(PREFIX, ref argPos);
+            bool hasMentionPrefix = msg.HasMentionPrefix(_discordClient.CurrentUser, ref argPos);
 
             if (!hasPrefix && !hasMentionPrefix)
+                return false;
+
+            return true;
+        }
+
+        internal bool IsSocketUserMessage(SocketMessage message, out SocketUserMessage userMessage)
+        {
+
+            bool isUserMessage = false;
+
+            userMessage = (message as SocketUserMessage);
+
+            if (userMessage != null)
+                isUserMessage = true;
+
+            return isUserMessage;
+        }
+
+        private async Task HandleCommand(SocketMessage msg)
+        {
+            if (!IsSocketUserMessage(msg, out SocketUserMessage message))
+                return;
+
+            if (!HasPrefix(message, out int argPos))
                 return;
 
             //Create Command Context

@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="AppSettings\appsettings.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

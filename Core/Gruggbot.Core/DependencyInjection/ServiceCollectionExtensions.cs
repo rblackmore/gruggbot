@@ -13,6 +13,7 @@ namespace Gruggbot.Core.DependencyInjection
         {
             services.AddSingleton<BotApp>();
             services.AddSingleton<DiscordSocketClient>();
+            services.AddSingleton<RandomMessages>();
 
             services.AddBotServices();
 
