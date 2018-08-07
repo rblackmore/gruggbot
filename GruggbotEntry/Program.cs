@@ -15,7 +15,7 @@ namespace GruggbotEntry
 {
     class Program
     {
-        private readonly string _configPath = $"AppSettings/appsettings.json";
+        private readonly string _configPath = $"data/AppSettings/appsettings.json";
 
         private IServiceProvider _serviceProvider;
         private IConfigurationRoot _configurationRoot;
@@ -74,7 +74,7 @@ namespace GruggbotEntry
             IConfigurationRoot configurationRoot = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddEnvironmentVariables()
-                .AddJsonFile($"AppSettings/appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile(_configPath, optional: true, reloadOnChange: true)
                 .Build();
 
             return Task.FromResult(configurationRoot);

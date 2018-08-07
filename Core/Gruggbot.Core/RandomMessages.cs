@@ -43,17 +43,18 @@ namespace Gruggbot.Core
             if (!_app.IsSocketUserMessage(message, out SocketUserMessage userMessage))
                 return;
 
-            if (execute > _chance)
-            {
-                _chance += CHANCEINCREMENT;
-                Log.Information($"Chance increased to {_chance}");
-                return;
-            }
-
-            _chance = DEFAULTCHANCE;
-
             if (userMessage.Content.ToLowerInvariant().Contains("shenanigans"))
             {
+                if (execute > _chance)
+                {
+                    _chance += CHANCEINCREMENT;
+                    Log.Verbose($"Chance increased to {_chance}");
+                    return;
+                }
+
+                _chance = DEFAULTCHANCE;
+
+
                 var channel = userMessage.Channel;
                 var author = userMessage.Author;
 

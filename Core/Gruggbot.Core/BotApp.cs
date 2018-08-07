@@ -22,7 +22,7 @@ namespace Gruggbot.Core
     public class BotApp
     {
         private const char PREFIX = '~';
-        private const string LOGPATH = "logs\\bot.log";
+        private const string LOGPATH = "data/logs/bot.log";
 
         private IConfigurationRoot _configuration;
         private ILogger<BotApp> _logger;
@@ -52,6 +52,11 @@ namespace Gruggbot.Core
             await InstallCommands();
 
             string token = _configuration.GetSection("Token").Value;
+            if (String.IsNullOrEmpty(token))
+            {
+                Log.Fatal($"Token not valid {token}");
+                return;
+            }
             await _discordClient.LoginAsync(TokenType.Bot, token);
             await _discordClient.StartAsync();
 
@@ -61,9 +66,9 @@ namespace Gruggbot.Core
         private void ConfigureLogging()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.Console(restrictedToMinimumLevel: LogEventLevel.Information)
-                .WriteTo.File(LOGPATH, rollingInterval: RollingInterval.Day)
+                .MinimumLevel.Verbose()
+                .WriteTo.Console()
+                .WriteTo.File(LOGPATH, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Debug)
                 .CreateLogger();
         }
 
