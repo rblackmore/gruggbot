@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using System;
@@ -10,8 +11,8 @@ namespace Gruggbot.Core
 {
     public class RandomMessages
     {
-        private const float DEFAULTCHANCE = 5f;
-        private const float CHANCEINCREMENT = 5f;
+        private const float DEFAULTCHANCE = 50f;
+        private const float CHANCEINCREMENT = 10f;
         private float _chance = DEFAULTCHANCE;
 
         private DiscordSocketClient _discordClient;
@@ -31,6 +32,8 @@ namespace Gruggbot.Core
         private void Setup()
         {
             _discordClient.MessageReceived += ShenanigansResponse;
+            _discordClient.MessageReceived += BananaReaction;
+
             Log.Information($"RandomMessages Initiated");
         }
 
@@ -60,6 +63,33 @@ namespace Gruggbot.Core
 
                 await channel.SendMessageAsync($"Pistol whips {author.Mention}");
             }
+        }
+
+        public async Task BananaReaction(SocketMessage message)
+        {
+
+            Random rando = new Random();
+
+            double execute = rando.NextDouble() * 100;
+
+            if (!_app.IsSocketUserMessage(message, out SocketUserMessage userMessage))
+                return;
+
+            if (userMessage.Content.ToLowerInvariant().Contains("banana"))
+            {
+                if (execute > _chance)
+                {
+                    _chance += CHANCEINCREMENT;
+                    Log.Verbose($"Chance increased to {_chance}");
+                    return;
+                }
+
+                _chance = DEFAULTCHANCE;
+                Log.Verbose($"Chance reset to {DEFAULTCHANCE}");
+
+                await userMessage.AddReactionAsync(new Emoji("🍌"));
+            }
+
         }
     }
 }

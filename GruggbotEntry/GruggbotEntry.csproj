@@ -19,11 +19,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.1.1" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="AppSettings\appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
 </Project>
