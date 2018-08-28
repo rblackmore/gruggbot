@@ -46,7 +46,7 @@ namespace GruggbotEntry
         {
             if (!File.Exists(_configPath))
             {
-                new FileInfo(_configPath).Directory.Create();
+                                new FileInfo(_configPath).Directory.Create();
                 File.WriteAllText(_configPath, JsonConvert.SerializeObject(new AppSettings(), Formatting.Indented));
                 return false;
             }

@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using Discord;
+using System.Diagnostics;
+using Gruggbot.Core.Service;
 
 namespace Gruggbot.Core.CommandModules
 {
@@ -15,10 +18,12 @@ namespace Gruggbot.Core.CommandModules
     public class FunStuffModule : ModuleBase
     {
         private readonly ImgurClient _imgurClient;
+        private readonly AudioService _audioService;
 
-        public FunStuffModule(ImgurClient imgurClient)
+        public FunStuffModule(ImgurClient imgurClient, AudioService audioService)
         {
             _imgurClient = imgurClient;
+            _audioService = audioService;
         }
 
         [Command("say"), Summary("Echos a message.")]
@@ -33,6 +38,18 @@ namespace Gruggbot.Core.CommandModules
         public async Task EightBall([Remainder(), Summary("the Question to answer")]string question)
         {
 
+        }
+
+        [Command("noot")]
+        [Hidden]
+        public async Task Noot(IVoiceChannel channel = null)
+        {
+            channel = channel ?? (Context.Message.Author as IGuildUser)?.VoiceChannel;
+
+            if (channel == null)
+                await ReplyAsync("User must be in a voice channel"); //Remove this and do nothing later
+
+            //await _audioService.JoinAudio(Context.Guild, (Conte))
         }
 
         [Command("hjälp", RunMode = RunMode.Async), Summary("no hablar español")]
