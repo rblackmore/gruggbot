@@ -9,10 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Serilog.Sinks.SystemConsole;
-using Serilog.Sinks.File;
-using Serilog.Events;
+
 
 namespace Gruggbot.Core
 {
@@ -38,7 +35,7 @@ namespace Gruggbot.Core
             _serviceProvider = serviceProvider;
             _discordClient = discordClient;
             _commands = new CommandService();
-            ConfigureLogging();
+            //ConfigureLogging();
 
         }
 
@@ -54,7 +51,7 @@ namespace Gruggbot.Core
             string token = _configuration.GetSection("Token").Value;
             if (String.IsNullOrEmpty(token))
             {
-                Log.Fatal($"Token not valid {token}");
+                _logger.LogError($"Token not valid {token}");
                 return;
             }
             await _discordClient.LoginAsync(TokenType.Bot, token);
@@ -63,19 +60,19 @@ namespace Gruggbot.Core
             await Task.Delay(-1);
         }
 
-        private void ConfigureLogging()
-        {
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
-                .WriteTo.Console()
-                .WriteTo.File(LOGPATH, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Debug)
-                .CreateLogger();
-        }
+        //private void ConfigureLogging()
+        //{
+        //    Log.Logger = new LoggerConfiguration()
+        //        .MinimumLevel.Verbose()
+        //        .WriteTo.Console()
+        //        .WriteTo.File(LOGPATH, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Debug)
+        //        .CreateLogger();
+        //}
 
 
         private Task Client_Connected()
         {
-            Log.Information($"Connected as {_discordClient.CurrentUser.Username}");
+            _logger.LogInformation($"Connected as {_discordClient.CurrentUser.Username}");
             return Task.CompletedTask;
         }
 
@@ -134,13 +131,13 @@ namespace Gruggbot.Core
             var result = await _commands.ExecuteAsync(context, argPos, _serviceProvider);
 
             if (!result.IsSuccess)
-                Log.Error("{@error} {@message}", result.ErrorReason, message.Content);
+                _logger.LogError("{@error} {@message}", result.ErrorReason, message.Content);
         }
 
         private Task DiscordLogEvent(LogMessage msg)
         {
             //_logger.LogInformation("{0}", msg.ToString());
-            Log.Information(msg.ToString());
+            _logger.LogInformation(msg.ToString());
             return Task.CompletedTask;
         }
     }

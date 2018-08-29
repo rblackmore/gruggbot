@@ -10,12 +10,18 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Gruggbot.Core.Configuration;
+using Serilog;
+using GruggbotEntry.LogFilters;
+using Serilog.Filters;
+using Discord.Commands;
 
 namespace GruggbotEntry
 {
     class Program
     {
         private readonly string _configPath = $"data/AppSettings/appsettings.json";
+        private readonly string _logBotPath = "data/logs/bot.log";
+        private readonly string _logCommandsPath = "data/logs/commands.log";
 
         private IServiceProvider _serviceProvider;
         private IConfigurationRoot _configurationRoot;
@@ -54,14 +60,27 @@ namespace GruggbotEntry
             services.AddSingleton<IConfigurationRoot>(await GetConfiguration());
 
             //Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
 
+                //PRIMARY LOGGER
+                .WriteTo.Logger(lc => lc
+                    //.Filter.ByExcluding(Matching.FromSource<ModuleBase>())
+                    .WriteTo.Debug()
+                    .WriteTo.File(_logBotPath, rollingInterval: RollingInterval.Month)
+                    .WriteTo.Console())
 
-            //Configure Microsoft Logging
-            services.AddSingleton(new LoggerFactory()
-                .AddConsole()
-                .AddDebug());
+                //COMMAND LOGGER
+                //.WriteTo.Logger(lc => lc
+                //    .Filter.ByIncludingOnly(Matching.FromSource<ModuleBase>())
+                //    .WriteTo.Debug()
+                //    .WriteTo.File(_logCommandsPath, rollingInterval: RollingInterval.Month))
 
-            services.AddLogging();
+                .CreateLogger();
+
+            services.AddLogging(builder =>
+                builder.AddSerilog(dispose: true));
 
             services.AddBot();
 

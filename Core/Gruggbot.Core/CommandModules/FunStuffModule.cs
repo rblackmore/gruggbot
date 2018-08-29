@@ -11,6 +11,7 @@ using System.Linq;
 using Discord;
 using System.Diagnostics;
 using Gruggbot.Core.Service;
+using Microsoft.Extensions.Logging;
 
 namespace Gruggbot.Core.CommandModules
 {
@@ -20,10 +21,15 @@ namespace Gruggbot.Core.CommandModules
         private readonly ImgurClient _imgurClient;
         private readonly AudioService _audioService;
 
-        public FunStuffModule(ImgurClient imgurClient, AudioService audioService)
+        public FunStuffModule(ImgurClient imgurClient)
         {
             _imgurClient = imgurClient;
-            _audioService = audioService;
+            //_audioService = audioService;
+        }
+
+        private void Log(LogLevel logLevel, string message)
+        {
+            //_logger.Log(logLevel, message);    
         }
 
         [Command("say"), Summary("Echos a message.")]

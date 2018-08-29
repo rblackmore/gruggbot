@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,7 +33,7 @@ namespace Gruggbot.Core
             _discordClient.MessageReceived += ShenanigansResponse;
             _discordClient.MessageReceived += BananaReaction;
 
-            Log.Information($"RandomMessages Initiated");
+            _logger.LogInformation(new EventId(7, "RandomMessages"), $"RandomMessages Initiated");
         }
 
         public async Task ShenanigansResponse(SocketMessage message)
@@ -51,7 +50,7 @@ namespace Gruggbot.Core
                 if (execute > _chance)
                 {
                     _chance += CHANCEINCREMENT;
-                    Log.Verbose($"Chance increased to {_chance}");
+                    _logger.Log(LogLevel.Trace,$"Chance increased to {_chance}");
                     return;
                 }
 
@@ -80,12 +79,12 @@ namespace Gruggbot.Core
                 if (execute > _chance)
                 {
                     _chance += CHANCEINCREMENT;
-                    Log.Verbose($"Chance increased to {_chance}");
+                    _logger.Log(LogLevel.Trace, $"Chance increased to {_chance}");
                     return;
                 }
 
                 _chance = DEFAULTCHANCE;
-                Log.Verbose($"Chance reset to {DEFAULTCHANCE}");
+                _logger.Log(LogLevel.Trace, $"Chance reset to {DEFAULTCHANCE}");
 
                 await userMessage.AddReactionAsync(new Emoji("🍌"));
             }
