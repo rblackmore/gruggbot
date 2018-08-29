@@ -12,24 +12,28 @@ using Discord;
 using System.Diagnostics;
 using Gruggbot.Core.Service;
 using Microsoft.Extensions.Logging;
+using Imgur.API.Enums;
+using Gruggbot.Core.Logging;
 
 namespace Gruggbot.Core.CommandModules
 {
     [Summary("Random fun commands to play with")]
     public class FunStuffModule : ModuleBase
     {
+        private readonly ILogger<FunStuffModule> _logger;
         private readonly ImgurClient _imgurClient;
         private readonly AudioService _audioService;
 
-        public FunStuffModule(ImgurClient imgurClient)
+        public FunStuffModule(ILogger<FunStuffModule> logger, ImgurClient imgurClient)
         {
+            _logger = logger;
             _imgurClient = imgurClient;
             //_audioService = audioService;
         }
 
-        private void Log(LogLevel logLevel, string message)
+        private void Log(CommandEventLog message)
         {
-            //_logger.Log(logLevel, message);    
+            _logger.LogInformation("Command Executed: {@Command}", message);
         }
 
         [Command("say"), Summary("Echos a message.")]
@@ -75,7 +79,7 @@ namespace Gruggbot.Core.CommandModules
             count = (count < 1) ? 1 : count;
 
             var imageEndpoint = new GalleryEndpoint(_imgurClient);
-            var images = await imageEndpoint.SearchGalleryAdvancedAsync("pug", page: page);
+            var images = await imageEndpoint.SearchGalleryAdvancedAsync("pug", page: page, sort: GallerySortOrder.Viral);
 
             var imageList = images.ToList();
 
@@ -84,24 +88,34 @@ namespace Gruggbot.Core.CommandModules
 
             int next = rando.Next(0, imageList.Count - 1);
 
+            var pugs = new List<string>();
+
+            //Loop through for 'count' to get some pugs
             for (int idx = 0; idx < count; idx++)
             {
+
                 bool isSuccess = false;
                 int retries = 0;
+
+                //Loop until we successfully get a pug, or we fail 20 times
                 do
                 {
                     retries++;
+                    //If the selected index is just an image, get appropriate link to it.
                     if (imageList[next] is IGalleryImage image)
                     {
-                        await ReplyAsync(image.Link);
+                        pugs.Add((!String.IsNullOrEmpty(image.Gifv)) ? image.Gifv : image.Link);
                         isSuccess = true;
                     }
+                    //If not IGalleryImage, but is IGalleryAlbum
                     else if (imageList[next] is IGalleryAlbum album)
                     {
+
                         if (album.ImagesCount > 0)
                         {
                             int albumNext = (album.ImagesCount > 0) ? rando.Next(0, album.ImagesCount - 1) : 0;
-                            await ReplyAsync(album.Images.ToList()[albumNext].Link);
+                            IImage pugImage = album.Images.ElementAt(albumNext);
+                            pugs.Add((!String.IsNullOrEmpty(pugImage.Gifv)) ? pugImage.Gifv : pugImage.Link);
                             isSuccess = true;
                         }
                         else
@@ -117,6 +131,20 @@ namespace Gruggbot.Core.CommandModules
                 next = rando.Next(0, imageList.Count - 1);
 
             }
+
+            foreach (var pug in pugs)
+            {
+                await ReplyAsync(pug);
+            }
+
+            Log(new CommandEventLog
+            {
+                DateTime = DateTime.Now,
+                Author = Context.Message.Author.Username,
+                Module = "FunstuffModule",
+                Command = "Pug",
+                Params = new string[] { count.ToString() }
+            });
 
         }
     }

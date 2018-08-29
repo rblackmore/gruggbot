@@ -3,23 +3,21 @@ using Serilog.Events;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace GruggbotEntry.LogFilters
 {
-    class TestLogFilter : ILogEventFilter
+    class CommandLogFilter : ILogEventFilter
     {
         public bool IsEnabled(LogEvent logEvent)
         {
-            var vent = logEvent;
-
-
-            foreach (var prop in logEvent.Properties)
+            if (logEvent.Properties.TryGetValue("Command", out LogEventPropertyValue p) && p is StructureValue structured)
             {
-                Console.WriteLine($"Filter: {prop.Key}:{prop.Value}");
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

@@ -11,9 +11,11 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using Gruggbot.Core.Configuration;
 using Serilog;
+using Serilog.Formatting.Json;
 using GruggbotEntry.LogFilters;
 using Serilog.Filters;
 using Discord.Commands;
+using Gruggbot.Core.Logging;
 
 namespace GruggbotEntry
 {
@@ -66,16 +68,16 @@ namespace GruggbotEntry
 
                 //PRIMARY LOGGER
                 .WriteTo.Logger(lc => lc
-                    //.Filter.ByExcluding(Matching.FromSource<ModuleBase>())
+                    .Filter.ByExcluding(lev => new CommandLogFilter().IsEnabled(lev))
                     .WriteTo.Debug()
                     .WriteTo.File(_logBotPath, rollingInterval: RollingInterval.Month)
                     .WriteTo.Console())
 
                 //COMMAND LOGGER
-                //.WriteTo.Logger(lc => lc
-                //    .Filter.ByIncludingOnly(Matching.FromSource<ModuleBase>())
-                //    .WriteTo.Debug()
-                //    .WriteTo.File(_logCommandsPath, rollingInterval: RollingInterval.Month))
+                .WriteTo.Logger(lc => lc
+                    .Filter.With<CommandLogFilter>()
+                    .WriteTo.Debug()
+                    .WriteTo.File(new JsonFormatter(), _logCommandsPath, rollingInterval: RollingInterval.Month))
 
                 .CreateLogger();
 

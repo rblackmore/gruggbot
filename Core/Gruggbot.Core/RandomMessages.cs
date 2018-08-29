@@ -33,7 +33,7 @@ namespace Gruggbot.Core
             _discordClient.MessageReceived += ShenanigansResponse;
             _discordClient.MessageReceived += BananaReaction;
 
-            _logger.LogInformation(new EventId(7, "RandomMessages"), $"RandomMessages Initiated");
+            _logger.LogInformation($"RandomMessages Initiated");
         }
 
         public async Task ShenanigansResponse(SocketMessage message)
