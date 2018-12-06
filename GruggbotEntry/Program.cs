@@ -16,6 +16,7 @@ using GruggbotEntry.LogFilters;
 using Serilog.Filters;
 using Discord.Commands;
 using Gruggbot.Core.Logging;
+using Serilog.Events;
 
 namespace GruggbotEntry
 {
@@ -77,7 +78,7 @@ namespace GruggbotEntry
                 .WriteTo.Logger(lc => lc
                     .Filter.With<CommandLogFilter>()
                     .WriteTo.Debug()
-                    .WriteTo.File(new JsonFormatter(), _logCommandsPath, rollingInterval: RollingInterval.Month))
+                    .WriteTo.File(new JsonFormatter(), _logCommandsPath, rollingInterval: RollingInterval.Day))
 
                 .CreateLogger();
 

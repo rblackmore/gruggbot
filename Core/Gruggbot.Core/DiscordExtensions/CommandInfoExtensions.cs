@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord.Commands;
 using Discord;
 using System.Linq;
+using Gruggbot.Core.CommandModules;
 
 namespace Gruggbot.Core.DiscordExtensions
 {

@@ -12,5 +12,6 @@ namespace Gruggbot.Core.CommandModules
         {
             return Task.FromResult(PreconditionResult.FromSuccess());
         }
+
     }
 }

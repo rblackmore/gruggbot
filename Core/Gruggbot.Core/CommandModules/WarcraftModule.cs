@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 namespace Gruggbot.Core.CommandModules
 {
     [Summary("Warcraft")]
+    [Hidden]
     public class WarcraftModule : ModuleBase
     {
         private readonly DateTime releaseUTC = new DateTime(2018, 8, 13, 22, 00, 00, DateTimeKind.Utc);
 
         [Command("bfa")]
+        [Hidden]
         [Alias("BattleForAzeroth")]
         public async Task BattleForAzeroth([Summary("Timezone Offset Hours eg (10, -8.5)")] double offset = 10d)
         {

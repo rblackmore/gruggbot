@@ -61,6 +61,8 @@ namespace Gruggbot.Core
                 var author = userMessage.Author;
 
                 await channel.SendMessageAsync($"Pistol whips {author.Mention}");
+
+                _logger.LogInformation("{Author} was Pistol Whipped in {Channel}", author.Username, channel.Name);
             }
         }
 
@@ -87,6 +89,8 @@ namespace Gruggbot.Core
                 _logger.Log(LogLevel.Trace, $"Chance reset to {DEFAULTCHANCE}");
 
                 await userMessage.AddReactionAsync(new Emoji("🍌"));
+
+                _logger.LogInformation("Banana Reaction given to {Author} in {Channel}", userMessage.Author.Username, userMessage.Channel.Name);
             }
 
         }

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Gruggbot.Core.CommandModules
 {
-    [Group("info")]
+    [Group("InfoModule")]
+    [Alias("info")]
     [Summary("Provides Information about the Bot or Users")]
     public class InfoCommandModule : ModuleBase
     {
@@ -18,6 +19,7 @@ namespace Gruggbot.Core.CommandModules
         }
 
         [Command("system")]
+        [Summary("Sends DirectMessage with details about the host system (Only Available to the bot Owner)")]
         [RequireOwner]
         public async Task SysInfo()
         {

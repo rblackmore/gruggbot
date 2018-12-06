@@ -1,19 +1,16 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
+using Gruggbot.Core.Logging;
+using Gruggbot.Core.Service;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
+using Imgur.API.Enums;
 using Imgur.API.Models;
-using Imgur.API.Models.Impl;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq;
-using Discord;
-using System.Diagnostics;
-using Gruggbot.Core.Service;
-using Microsoft.Extensions.Logging;
-using Imgur.API.Enums;
-using Gruggbot.Core.Logging;
+using System.Threading.Tasks;
 
 namespace Gruggbot.Core.CommandModules
 {
@@ -29,11 +26,6 @@ namespace Gruggbot.Core.CommandModules
             _logger = logger;
             _imgurClient = imgurClient;
             //_audioService = audioService;
-        }
-
-        private void Log(CommandEventLog message)
-        {
-            _logger.LogInformation("Command Executed: {@Command}", message);
         }
 
         [Command("say"), Summary("Echos a message.")]
@@ -70,7 +62,7 @@ namespace Gruggbot.Core.CommandModules
         }
 
         [Command("pug", RunMode = RunMode.Async)]
-        public async Task PugAsync(int count = 1)
+        public async Task PugAsync([Summary("Number of pugs to send (Max 10)")]int count = 1)
         {
             Random rando = new Random();
             int page = rando.Next(0, 100);
@@ -137,14 +129,7 @@ namespace Gruggbot.Core.CommandModules
                 await ReplyAsync(pug);
             }
 
-            Log(new CommandEventLog
-            {
-                DateTime = DateTime.Now,
-                Author = Context.Message.Author.Username,
-                Module = "FunstuffModule",
-                Command = "Pug",
-                Params = new string[] { count.ToString() }
-            });
+            _logger.LogCommandCall(Context.Message.Author.Username, "Pug", count.ToString());
 
         }
     }
