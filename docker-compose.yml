@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  gruggbotentry:
+    container_name: gruggbot
+    image: ${DOCKER_REGISTRY}gruggbotentry
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: gruggbot:latest

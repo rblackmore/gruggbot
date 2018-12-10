@@ -1,5 +1,6 @@
 ﻿using Discord;
 using Discord.WebSocket;
+using Gruggbot.Core.Helpers;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,12 @@ namespace Gruggbot.Core
         private DiscordSocketClient _discordClient;
         private ILogger<RandomMessages> _logger;
         private IServiceProvider _serviceProvider;
-        private BotApp _app;
 
         public RandomMessages(BotApp app, DiscordSocketClient discordClient, ILogger<RandomMessages> logger, IServiceProvider serviceProvider)
         {
             _discordClient = discordClient;
             _logger = logger;
             _serviceProvider = serviceProvider;
-            _app = app;
             Setup();
         }
 
@@ -32,8 +31,24 @@ namespace Gruggbot.Core
         {
             _discordClient.MessageReceived += ShenanigansResponse;
             _discordClient.MessageReceived += BananaReaction;
+            _discordClient.MessageReceived += WelcomeBack;
 
             _logger.LogInformation($"RandomMessages Initiated");
+        }
+
+        private async Task WelcomeBack(SocketMessage message)
+        {
+
+            if (!MessageContentCheckHelper.IsSocketUserMessage(message, out SocketUserMessage userMessage))
+                return;
+
+            if (message.Content.ToLower().Contains("welcome back") && MessageContentCheckHelper.BotMentioned(_discordClient, userMessage))
+            {
+                var channel = userMessage.Channel;
+                var author = userMessage.Author;
+
+                await channel.SendMessageAsync($"Thank you {author.Mention}");
+            }
         }
 
         public async Task ShenanigansResponse(SocketMessage message)
@@ -42,7 +57,7 @@ namespace Gruggbot.Core
 
             double execute = rando.NextDouble() * 100;
 
-            if (!_app.IsSocketUserMessage(message, out SocketUserMessage userMessage))
+            if (!MessageContentCheckHelper.IsSocketUserMessage(message, out SocketUserMessage userMessage))
                 return;
 
             if (userMessage.Content.ToLowerInvariant().Contains("shenanigans"))
@@ -73,7 +88,7 @@ namespace Gruggbot.Core
 
             double execute = rando.NextDouble() * 100;
 
-            if (!_app.IsSocketUserMessage(message, out SocketUserMessage userMessage))
+            if (!MessageContentCheckHelper.IsSocketUserMessage(message, out SocketUserMessage userMessage))
                 return;
 
             if (userMessage.Content.ToLowerInvariant().Contains("banana"))

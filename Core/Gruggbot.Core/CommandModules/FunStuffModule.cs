@@ -19,7 +19,7 @@ namespace Gruggbot.Core.CommandModules
     {
         private readonly ILogger<FunStuffModule> _logger;
         private readonly ImgurClient _imgurClient;
-        private readonly AudioService _audioService;
+        //private readonly AudioService _audioService;
 
         public FunStuffModule(ILogger<FunStuffModule> logger, ImgurClient imgurClient)
         {
@@ -39,7 +39,7 @@ namespace Gruggbot.Core.CommandModules
         [Hidden]
         public async Task EightBall([Remainder(), Summary("the Question to answer")]string question)
         {
-
+            await Task.CompletedTask;
         }
 
         [Command("noot")]

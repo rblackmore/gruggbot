@@ -48,7 +48,6 @@ namespace GruggbotEntry
 
             await _serviceProvider.GetService<BotApp>().Run();
 
-            Console.ReadKey();
         }
 
         private async Task<bool> ConfigureServices(IServiceCollection services)

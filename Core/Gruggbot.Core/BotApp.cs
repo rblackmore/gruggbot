@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
-
+using Gruggbot.Core.Helpers;
 
 namespace Gruggbot.Core
 {
@@ -88,39 +88,12 @@ namespace Gruggbot.Core
             await _commands.AddModuleAsync<WarcraftModule>();
         }
 
-        internal bool HasPrefix(SocketUserMessage msg, out int argPos)
-        {
-            //First character of command after prefix
-            argPos = 0;
-
-            bool hasPrefix = msg.HasCharPrefix(PREFIX, ref argPos);
-            bool hasMentionPrefix = msg.HasMentionPrefix(_discordClient.CurrentUser, ref argPos);
-
-            if (!hasPrefix && !hasMentionPrefix)
-                return false;
-
-            return true;
-        }
-
-        internal bool IsSocketUserMessage(SocketMessage message, out SocketUserMessage userMessage)
-        {
-
-            bool isUserMessage = false;
-
-            userMessage = (message as SocketUserMessage);
-
-            if (userMessage != null)
-                isUserMessage = true;
-
-            return isUserMessage;
-        }
-
         private async Task HandleCommand(SocketMessage msg)
         {
-            if (!IsSocketUserMessage(msg, out SocketUserMessage message))
+            if (!MessageContentCheckHelper.IsSocketUserMessage(msg, out SocketUserMessage message))
                 return;
 
-            if (!HasPrefix(message, out int argPos))
+            if (!MessageContentCheckHelper.HasPrefix(_discordClient, message, PREFIX, out int argPos))
                 return;
 
             //Create Command Context
