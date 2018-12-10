@@ -23,7 +23,19 @@ namespace Gruggbot.Core.CommandModules
         [RequireOwner]
         public async Task SysInfo()
         {
-            await Context.Message.Author.SendMessageAsync($"System Information: {Environment.MachineName}");
+            var author = Context.Message.Author;
+            StringBuilder sb = new StringBuilder();
+
+            OperatingSystem OS = Environment.OSVersion;
+
+            sb.AppendLine("System Information");
+            sb.AppendLine($"Machine Name: {Environment.MachineName}");
+            sb.AppendLine($"OS Platform: {OS.Platform}");
+            sb.AppendLine($"OS Version: {OS.VersionString}");
+
+            await author.SendMessageAsync(sb.ToString());
+
+            //await Context.Message.Author.SendMessageAsync($"System Information: {Environment.MachineName}"); 
         }
 
         [Command("userinfo"), Summary("Returns info about the current user, or the user parameter, if one is parsed")]
@@ -31,7 +43,18 @@ namespace Gruggbot.Core.CommandModules
         public async Task UserInfo([Summary("The (optional) user to get info for")] IUser user = null)
         {
             var userInfo = user ?? Context.Client.CurrentUser;
-            await ReplyAsync($"{userInfo.Username}#{userInfo.Discriminator}");
+            var author = Context.Message.Author;
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine($"User Info for {userInfo.Username}#{userInfo.Discriminator}");
+            sb.AppendLine($"ID: {userInfo.Id}");
+            sb.AppendLine($"Bot: {userInfo.IsBot}");
+            sb.AppendLine($"Status: {userInfo.Status}");
+            sb.AppendLine($"Currently Playing: {userInfo.Game}");
+            sb.AppendLine($"Avatar URL: {userInfo.GetAvatarUrl()}");
+
+            await author.SendMessageAsync(sb.ToString());
         }
     }
 }
