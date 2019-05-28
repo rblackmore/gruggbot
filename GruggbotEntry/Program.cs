@@ -1,22 +1,16 @@
-﻿using Discord;
-using Gruggbot.Core;
+﻿using Gruggbot.Core;
+using Gruggbot.Core.Configuration;
 using Gruggbot.Core.DependencyInjection;
+using GruggbotEntry.LogFilters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.ILogger;
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
-using Gruggbot.Core.Configuration;
-using Serilog;
-using Serilog.Formatting.Json;
-using GruggbotEntry.LogFilters;
-using Serilog.Filters;
-using Discord.Commands;
-using Gruggbot.Core.Logging;
-using Serilog.Events;
 
 namespace GruggbotEntry
 {
@@ -25,6 +19,7 @@ namespace GruggbotEntry
         private readonly string _configPath = $"data/AppSettings/appsettings.json";
         private readonly string _logBotPath = "data/logs/bot.log";
         private readonly string _logCommandsPath = "data/logs/commands.log";
+        private readonly string _imagesPath = $"data/Images";
 
         private IServiceProvider _serviceProvider;
         private IConfigurationRoot _configurationRoot;
@@ -54,7 +49,7 @@ namespace GruggbotEntry
         {
             if (!File.Exists(_configPath))
             {
-                                new FileInfo(_configPath).Directory.Create();
+                new FileInfo(_configPath).Directory.Create();
                 File.WriteAllText(_configPath, JsonConvert.SerializeObject(new AppSettings(), Formatting.Indented));
                 return false;
             }

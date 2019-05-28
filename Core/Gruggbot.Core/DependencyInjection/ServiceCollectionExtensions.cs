@@ -1,4 +1,5 @@
 ﻿using Discord.WebSocket;
+using Gruggbot.Core.Logging;
 using Imgur.API.Authentication.Impl;
 using Microsoft.Extensions.DependencyInjection;
 using System;
