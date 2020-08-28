@@ -51,7 +51,7 @@ namespace Gruggbot.Core.CommandModules
             sb.AppendLine($"ID: {userInfo.Id}");
             sb.AppendLine($"Bot: {userInfo.IsBot}");
             sb.AppendLine($"Status: {userInfo.Status}");
-            sb.AppendLine($"Currently Playing: {userInfo.Game}");
+            sb.AppendLine($"Current Activity: {userInfo.Activity}");
             sb.AppendLine($"Avatar URL: {userInfo.GetAvatarUrl()}");
 
             await author.SendMessageAsync(sb.ToString());

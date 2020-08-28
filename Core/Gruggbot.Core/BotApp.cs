@@ -46,7 +46,7 @@ namespace Gruggbot.Core
 
             _randomMessages = _serviceProvider.GetService<RandomMessages>();
 
-            await InstallCommands();
+            await InstallCommands(_serviceProvider);
 
             string token = _configuration.GetSection("Token").Value;
             if (String.IsNullOrEmpty(token))
@@ -76,16 +76,16 @@ namespace Gruggbot.Core
             return Task.CompletedTask;
         }
 
-        private async Task InstallCommands()
+        private async Task InstallCommands(IServiceProvider serviceProvider)
         {
             _discordClient.MessageReceived += HandleCommand;
             _commands.Log += DiscordLogEvent;
             
             //Add Modules
-            await _commands.AddModuleAsync<HelpModule>();
-            await _commands.AddModuleAsync<InfoCommandModule>();
-            await _commands.AddModuleAsync<FunStuffModule>();
-            await _commands.AddModuleAsync<WarcraftModule>();
+            await _commands.AddModuleAsync<HelpModule>(serviceProvider);
+            await _commands.AddModuleAsync<InfoCommandModule>(serviceProvider);
+            await _commands.AddModuleAsync<FunStuffModule>(serviceProvider);
+            await _commands.AddModuleAsync<WarcraftModule>(serviceProvider);
         }
 
         private async Task HandleCommand(SocketMessage msg)

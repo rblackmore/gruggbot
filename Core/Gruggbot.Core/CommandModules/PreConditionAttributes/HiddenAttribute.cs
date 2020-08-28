@@ -8,10 +8,9 @@ namespace Gruggbot.Core.CommandModules
 {
     public class HiddenAttribute : PreconditionAttribute
     {
-        public override Task<PreconditionResult> CheckPermissions(ICommandContext context, CommandInfo command, IServiceProvider services)
+        public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)
         {
             return Task.FromResult(PreconditionResult.FromSuccess());
         }
-
     }
 }

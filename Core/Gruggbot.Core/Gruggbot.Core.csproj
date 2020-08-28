@@ -6,10 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net" Version="1.0.2" />
-    <PackageReference Include="Imgur.API" Version="4.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Discord.Net" Version="2.2.0" />
+    <PackageReference Include="Imgur.API" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.7" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.7" />
   </ItemGroup>
 
 </Project>

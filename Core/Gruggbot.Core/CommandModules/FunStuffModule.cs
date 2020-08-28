@@ -1,17 +1,20 @@
-﻿using Discord;
-using Discord.Commands;
-using Gruggbot.Core.Logging;
-using Gruggbot.Core.Service;
-using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
-using Imgur.API.Enums;
-using Imgur.API.Models;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+
+using Discord;
+using Discord.Commands;
+
+using Gruggbot.Core.Logging;
+
+using Imgur.API.Authentication;
+using Imgur.API.Endpoints;
+using Imgur.API.Models;
+
+using Microsoft.Extensions.Logging;
 
 namespace Gruggbot.Core.CommandModules
 {
@@ -19,13 +22,13 @@ namespace Gruggbot.Core.CommandModules
     public class FunStuffModule : ModuleBase
     {
         private readonly ILogger<FunStuffModule> _logger;
-        private readonly ImgurClient _imgurClient;
+        //private readonly ApiClient _imgurClient;
         //private readonly AudioService _audioService;
 
-        public FunStuffModule(ILogger<FunStuffModule> logger, ImgurClient imgurClient)
+        public FunStuffModule(ILogger<FunStuffModule> logger)
         {
             _logger = logger;
-            _imgurClient = imgurClient;
+            //_imgurClient = imgurClient;
             //_audioService = audioService;
         }
 
@@ -93,76 +96,77 @@ namespace Gruggbot.Core.CommandModules
             await ReplyAsync("No Hablar Español");
         }
 
-        [Command("pug", RunMode = RunMode.Async)]
-        public async Task PugAsync([Summary("Number of pugs to send (Max 10)")]int count = 1)
-        {
-            Random rando = new Random();
-            int page = rando.Next(0, 100);
+        //[Command("pug", RunMode = RunMode.Async)]
+        //public async Task PugAsync([Summary("Number of pugs to send (Max 10)")]int count = 1)
+        //{
+        //    Random rando = new Random();
+        //    int page = rando.Next(0, 100);
 
-            count = (count > 10) ? 10 : count;
-            count = (count < 1) ? 1 : count;
+        //    count = (count > 10) ? 10 : count;
+        //    count = (count < 1) ? 1 : count;
 
-            var imageEndpoint = new GalleryEndpoint(_imgurClient);
-            var images = await imageEndpoint.SearchGalleryAdvancedAsync("pug", page: page, sort: GallerySortOrder.Viral);
+        //    var imageEndpoint = new Imgur.API.Endpoints.ImageEndpoint(_imgurClient, this._httpClient);
+        //    imageEndpoint.
+        //    var images = await imageEndpoint.SearchGalleryAdvancedAsync("pug", page: page, sort: GallerySortOrder.Viral);
 
-            var imageList = images.ToList();
+        //    var imageList = images.ToList();
 
-            if (imageList.Count < 1)
-                throw new ApplicationException($"ImageList Count Less than 1: {imageList.Count}");
+        //    if (imageList.Count < 1)
+        //        throw new ApplicationException($"ImageList Count Less than 1: {imageList.Count}");
 
-            int next = rando.Next(0, imageList.Count - 1);
+        //    int next = rando.Next(0, imageList.Count - 1);
 
-            var pugs = new List<string>();
+        //    var pugs = new List<string>();
 
-            //Loop through for 'count' to get some pugs
-            for (int idx = 0; idx < count; idx++)
-            {
+        //    //Loop through for 'count' to get some pugs
+        //    for (int idx = 0; idx < count; idx++)
+        //    {
 
-                bool isSuccess = false;
-                int retries = 0;
+        //        bool isSuccess = false;
+        //        int retries = 0;
 
-                //Loop until we successfully get a pug, or we fail 20 times
-                do
-                {
-                    retries++;
-                    //If the selected index is just an image, get appropriate link to it.
-                    if (imageList[next] is IGalleryImage image)
-                    {
-                        pugs.Add((!String.IsNullOrEmpty(image.Gifv)) ? image.Gifv : image.Link);
-                        isSuccess = true;
-                    }
-                    //If not IGalleryImage, but is IGalleryAlbum
-                    else if (imageList[next] is IGalleryAlbum album)
-                    {
+        //        //Loop until we successfully get a pug, or we fail 20 times
+        //        do
+        //        {
+        //            retries++;
+        //            //If the selected index is just an image, get appropriate link to it.
+        //            if (imageList[next] is IGalleryImage image)
+        //            {
+        //                pugs.Add((!String.IsNullOrEmpty(image.Gifv)) ? image.Gifv : image.Link);
+        //                isSuccess = true;
+        //            }
+        //            //If not IGalleryImage, but is IGalleryAlbum
+        //            else if (imageList[next] is IGalleryAlbum album)
+        //            {
 
-                        if (album.ImagesCount > 0)
-                        {
-                            int albumNext = (album.ImagesCount > 0) ? rando.Next(0, album.ImagesCount - 1) : 0;
-                            IImage pugImage = album.Images.ElementAt(albumNext);
-                            pugs.Add((!String.IsNullOrEmpty(pugImage.Gifv)) ? pugImage.Gifv : pugImage.Link);
-                            isSuccess = true;
-                        }
-                        else
-                        {
-                            next = rando.Next(0, imageList.Count - 1);
-                        }
-                    }
+        //                if (album.ImagesCount > 0)
+        //                {
+        //                    int albumNext = (album.ImagesCount > 0) ? rando.Next(0, album.ImagesCount - 1) : 0;
+        //                    IImage pugImage = album.Images.ElementAt(albumNext);
+        //                    pugs.Add((!String.IsNullOrEmpty(pugImage.Gifv)) ? pugImage.Gifv : pugImage.Link);
+        //                    isSuccess = true;
+        //                }
+        //                else
+        //                {
+        //                    next = rando.Next(0, imageList.Count - 1);
+        //                }
+        //            }
 
-                } while (!isSuccess || retries > 20);
+        //        } while (!isSuccess || retries > 20);
 
 
-                imageList.RemoveAt(next);
-                next = rando.Next(0, imageList.Count - 1);
+        //        imageList.RemoveAt(next);
+        //        next = rando.Next(0, imageList.Count - 1);
 
-            }
+        //    }
 
-            foreach (var pug in pugs)
-            {
-                await ReplyAsync(pug);
-            }
+        //    foreach (var pug in pugs)
+        //    {
+        //        await ReplyAsync(pug);
+        //    }
 
-            _logger.LogCommandCall(Context.Message.Author.Username, "Pug", count.ToString());
+        //    _logger.LogCommandCall(Context.Message.Author.Username, "Pug", count.ToString());
 
-        }
+        //}
     }
 }

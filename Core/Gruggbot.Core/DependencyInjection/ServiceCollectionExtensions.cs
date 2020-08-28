@@ -1,10 +1,8 @@
 ﻿using Discord.WebSocket;
-using Gruggbot.Core.Logging;
-using Imgur.API.Authentication.Impl;
+
+using Imgur.API.Authentication;
+
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Gruggbot.Core.DependencyInjection
 {
@@ -23,7 +21,7 @@ namespace Gruggbot.Core.DependencyInjection
 
         private static IServiceCollection AddBotServices(this IServiceCollection services)
         {
-            services.AddSingleton(new ImgurClient("8aba898176d1bfc"));
+            services.AddSingleton(new ApiClient("8aba898176d1bfc"));
 
             return services;
         }

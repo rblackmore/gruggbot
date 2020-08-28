@@ -7,41 +7,34 @@ namespace Gruggbot.Core.CommandModules
     [Summary("Warcraft")]
     public class WarcraftModule : ModuleBase
     {
-        [Command("classic")]
-        [Summary("Provides a countdown Timer for Classic WoW Release")]
-        [Alias("classic", "wowclassic", "classico")]
-        public async Task ClassicRelase(params string[] args)
+        [Command("shadowlands")]
+        [Summary("Provides a countdown Timer for World of Warcraft: Shadowlands Expansion")]
+        [Alias("sl", "wow:sl", "shadowlambs")]
+        public async Task ShadowlandsRelease()
         {
 
-            DateTime release = new DateTime(2019, 08, 26, 22, 0, 0, DateTimeKind.Utc);
-            DateTime charCreate = new DateTime(2019, 8, 12, 22, 0, 0, DateTimeKind.Utc);
+            DateTime release = new DateTime(2020, 10, 26, 23, 0, 0, DateTimeKind.Utc);
+            DateTime patch = new DateTime(2020, 9, 22, 00, 0, 0, DateTimeKind.Utc);
 
-            TimeZoneInfo aestZoneInfo = TimeZoneInfo.CreateCustomTimeZone("AEST", TimeSpan.FromHours(10), "AUS Eastern Standard Time", "AUS Eastern Standard Time");
+            TimeZoneInfo aestZoneInfo = TimeZoneInfo.CreateCustomTimeZone("AEDT", TimeSpan.FromHours(10), "AUS Eastern Daylight Savings Time", "AUS Eastern Daylight Savings Time");
 
             DateTime aestRelease = TimeZoneInfo.ConvertTimeFromUtc(release, aestZoneInfo);
-            DateTime aestCharCreate = TimeZoneInfo.ConvertTimeFromUtc(charCreate, aestZoneInfo);
+            DateTime aestpatch = TimeZoneInfo.ConvertTimeFromUtc(patch, aestZoneInfo);
 
             var releaseCountdown = release - DateTime.UtcNow;
-            var charCreateCountdown = charCreate - DateTime.UtcNow;
+            var patchCountdown = patch - DateTime.UtcNow;
 
-            string message = $"World of Warcraft: Classic Will be released in {releaseCountdown.Days} Days {releaseCountdown.Hours} hours {releaseCountdown.Minutes} minutes and {releaseCountdown.Seconds} seconds {Environment.NewLine} on {aestRelease.ToLongDateString()} at {aestRelease.ToLongTimeString()} AEST";
+            string releasemessage = $"World of Warcraft: Shadowlands Will be released in {releaseCountdown.Days} Days {releaseCountdown.Hours} hours {releaseCountdown.Minutes} minutes and {releaseCountdown.Seconds} seconds" +
+                                    $"{Environment.NewLine}{aestRelease.ToLongDateString()} at {aestRelease.ToLongTimeString()} AEST";
 
-            string image = $"data/Images/classic.png";
+            string patchETAmessage = $"Shadowlands Pre-Patch is estimated to release on {aestpatch.DayOfWeek} {aestpatch.Day} of {aestpatch:MMMM} {aestpatch.Year}";
 
-            foreach (var arg in args)
-            {
-                if (arg.Equals("map", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    image = $"data/Images/ClassicGlobalTimes.jpg";
-                }
+            string image = $"data/Images/Shadowlands_Logo.png";
+            string map = $"data/Images/ShadowlandsGlobalTimes.jpg";
 
-                if (arg.Equals("cc", StringComparison.CurrentCultureIgnoreCase) || arg.Equals("charcreate", StringComparison.CurrentCultureIgnoreCase) || arg.Equals("charactercreation", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    message = $"World of Warcraft: Classic Character creation begins in {charCreateCountdown.Days} Days {charCreateCountdown.Hours} hours {charCreateCountdown.Minutes} minutes and {charCreateCountdown.Seconds} seconds {Environment.NewLine} on {aestCharCreate.ToLongDateString()} at {aestCharCreate.ToLongTimeString()} AEST";
-                }
-            }
-
-            await Context.Channel.SendFileAsync(image, text: message);
+            await Context.Channel.SendFileAsync(image);
+            await Context.Channel.SendFileAsync(map, text: releasemessage);
+            await Context.Channel.SendMessageAsync(patchETAmessage);
         }
     }
 }
