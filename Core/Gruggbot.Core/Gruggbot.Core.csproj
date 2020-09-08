@@ -13,8 +13,4 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.7" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CommandModules\WarcraftModule\" />
-  </ItemGroup>
-
 </Project>
