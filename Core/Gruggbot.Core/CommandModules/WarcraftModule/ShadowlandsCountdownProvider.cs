@@ -8,11 +8,11 @@ namespace Gruggbot.Core.CommandModules
 {
     internal class ShadowlandsCountdownProvider
     {
-        private DateTime releaseDateUTC = 
+        private readonly DateTime releaseDateUTC = 
             new DateTime(2020, 10, 26, 23, 0, 0, DateTimeKind.Utc);
 
-        private DateTime prePatchDateUTC = 
-            new DateTime(2020, 9, 22, 00, 0, 0, DateTimeKind.Utc);
+        private readonly DateTime prePatchDateUTC = 
+            new DateTime(2020, 10, 6, 00, 0, 0, DateTimeKind.Utc);  
 
         private ICommandContext Context { get; set; }
 

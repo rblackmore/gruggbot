@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GruggbotEntry": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
