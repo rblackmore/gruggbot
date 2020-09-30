@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GruggbotBootstrapper": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CONSOLENETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

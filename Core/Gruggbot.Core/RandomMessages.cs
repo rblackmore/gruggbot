@@ -19,15 +19,14 @@ namespace Gruggbot.Core
         private ILogger<RandomMessages> _logger;
         private IServiceProvider _serviceProvider;
 
-        public RandomMessages(BotApp app, DiscordSocketClient discordClient, ILogger<RandomMessages> logger, IServiceProvider serviceProvider)
+        public RandomMessages(DiscordSocketClient discordClient, ILogger<RandomMessages> logger, IServiceProvider serviceProvider)
         {
             _discordClient = discordClient;
             _logger = logger;
             _serviceProvider = serviceProvider;
-            Setup();
         }
 
-        private void Setup()
+        public void Setup()
         {
             _discordClient.MessageReceived += ShenanigansResponse;
             _discordClient.MessageReceived += BananaReaction;

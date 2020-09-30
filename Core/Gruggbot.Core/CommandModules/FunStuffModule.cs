@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 
-using Discord;
 using Discord.Commands;
-
-using Gruggbot.Core.Logging;
-
-using Imgur.API.Authentication;
-using Imgur.API.Endpoints;
-using Imgur.API.Models;
 
 using Microsoft.Extensions.Logging;
 

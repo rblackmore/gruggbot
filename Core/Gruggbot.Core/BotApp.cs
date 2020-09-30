@@ -1,54 +1,59 @@
-﻿using Discord;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+
 using Gruggbot.Core.CommandModules;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using Gruggbot.Core.Configuration;
 using Gruggbot.Core.Helpers;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Gruggbot.Core
 {
     /// <summary>
     /// Primary Class that Executes the Discord Bot. Call 
     /// </summary>
-    public class BotApp
+    public class BotApp : IHostedService
     {
-        private const char PREFIX = '~';
-        private const string LOGPATH = "data/logs/bot.log";
-
-        private IConfigurationRoot _configuration;
+        private BotConfiguration _configuration;
         private ILogger<BotApp> _logger;
         private IServiceProvider _serviceProvider;
         private DiscordSocketClient _discordClient;
         private CommandService _commands;
-        private RandomMessages _randomMessages;
 
-        public BotApp(ILogger<BotApp> logger, IConfigurationRoot configuration, DiscordSocketClient discordClient, IServiceProvider serviceProvider)
+        public BotApp(
+            ILogger<BotApp> logger, 
+            IOptions<BotConfiguration> configuration, 
+            DiscordSocketClient discordClient,
+            CommandService commands, 
+            IServiceProvider serviceProvider)
         {
-            _configuration = configuration;
+            _configuration = configuration.Value;
             _logger = logger;
             _serviceProvider = serviceProvider;
             _discordClient = discordClient;
-            _commands = new CommandService();
-            //ConfigureLogging();
-
+            _commands = commands;
         }
 
-        public async Task Run()
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             _discordClient.Log += DiscordLogEvent;
             _discordClient.Connected += Client_Connected;
 
-            _randomMessages = _serviceProvider.GetService<RandomMessages>();
+            _serviceProvider.GetService<RandomMessages>().Setup();
 
             await InstallCommands(_serviceProvider);
 
-            string token = _configuration.GetSection("Token").Value;
+            string token = _configuration.Token;
+
             if (String.IsNullOrEmpty(token))
             {
                 _logger.LogError($"Token not valid {token}");
@@ -56,19 +61,13 @@ namespace Gruggbot.Core
             }
             await _discordClient.LoginAsync(TokenType.Bot, token);
             await _discordClient.StartAsync();
-
-            await Task.Delay(-1);
+        }  
+        
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            this._logger.LogInformation("Host Stopping");
+            await this._discordClient.LogoutAsync();
         }
-
-        //private void ConfigureLogging()
-        //{
-        //    Log.Logger = new LoggerConfiguration()
-        //        .MinimumLevel.Verbose()
-        //        .WriteTo.Console()
-        //        .WriteTo.File(LOGPATH, rollingInterval: RollingInterval.Day, restrictedToMinimumLevel: LogEventLevel.Debug)
-        //        .CreateLogger();
-        //}
-
 
         private Task Client_Connected()
         {
@@ -80,7 +79,7 @@ namespace Gruggbot.Core
         {
             _discordClient.MessageReceived += HandleCommand;
             _commands.Log += DiscordLogEvent;
-            
+
             //Add Modules
             await _commands.AddModuleAsync<HelpModule>(serviceProvider);
             await _commands.AddModuleAsync<InfoCommandModule>(serviceProvider);
@@ -93,7 +92,7 @@ namespace Gruggbot.Core
             if (!MessageContentCheckHelper.IsSocketUserMessage(msg, out SocketUserMessage message))
                 return;
 
-            if (!MessageContentCheckHelper.HasPrefix(_discordClient, message, PREFIX, out int argPos))
+            if (!MessageContentCheckHelper.HasPrefix(_discordClient, message, _configuration.Prefix, out int argPos))
                 return;
 
             //Create Command Context
@@ -102,7 +101,7 @@ namespace Gruggbot.Core
             //Execute the command. (result does not indicate a return value,
             //rather an object stating if the command executed successfully
             var result = await _commands.ExecuteAsync(context, argPos, _serviceProvider);
-
+            
             if (!result.IsSuccess)
                 _logger.LogError("{@error} {@message}", result.ErrorReason, message.Content);
         }

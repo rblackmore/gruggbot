@@ -1,16 +1,20 @@
-﻿using Gruggbot.Core;
-using Gruggbot.Core.Configuration;
-using Gruggbot.Core.DependencyInjection;
-using GruggbotEntry.LogFilters;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Serilog;
-using Serilog.Formatting.Json;
-using Serilog.Sinks.ILogger;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+
+using Gruggbot.Core;
+using Gruggbot.Core.Configuration;
+using Gruggbot.Core.DependencyInjection;
+
+using GruggbotEntry.LogFilters;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using Newtonsoft.Json;
+
+using Serilog;
+using Serilog.Formatting.Json;
 
 namespace GruggbotEntry
 {
