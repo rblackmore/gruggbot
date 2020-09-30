@@ -8,8 +8,7 @@ namespace Gruggbot.Core.CommandModules
     public class WarcraftModule : ModuleBase
     {
         [Command("shadowlands")]
-        [Summary("Provides a countdown Timer " +
-            "for World of Warcraft: Shadowlands Expansion")]
+        [Summary("Provides a countdown Timer for World of Warcraft: Shadowlands Expansion")]
         [Alias("sl", "wow:sl", "shadowlambs")]
         public async Task ShadowlandsReleaseCommand()
         {

@@ -5,6 +5,12 @@
       "environmentVariables": {
         "CONSOLENETCORE_ENVIRONMENT": "Development"
       }
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "CONSOLENETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

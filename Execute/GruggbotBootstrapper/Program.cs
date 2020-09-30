@@ -5,6 +5,7 @@ using Gruggbot.Core.DependencyInjection;
 
 using GruggbotBootstrapper.Logging;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using Serilog;
@@ -33,6 +34,7 @@ namespace GruggbotBootstrapper
                 .ConfigureServices((context, services) =>
                 {
                     services.AddBot(context.Configuration);
+                    //services.AddHostedService<App>();
                 })
                 .UseSerilog();
 

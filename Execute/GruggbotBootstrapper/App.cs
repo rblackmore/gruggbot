@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.Eventing.Reader;
+﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,8 +22,25 @@ namespace GruggbotBootstrapper
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("Hello, World");
-            this.logger.LogInformation($"Token: {this.configuration.GetSection("Token").Value}");
+            this.logger.LogInformation("Beggining Timezone loop");
+
+            this.logger.LogInformation("TimeZone Count: " + TimeZoneInfo.GetSystemTimeZones().Count);
+
+            foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
+            {
+                this.logger.LogInformation(tz.Id);
+            }
+
+            try
+            {
+                var info = TimeZoneInfo.FindSystemTimeZoneById("Australia/Melbourne");
+                this.logger.LogInformation($"{info.StandardName}: {info.Id}");
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.Message);
+            }
+
             return Task.CompletedTask;
         }
 

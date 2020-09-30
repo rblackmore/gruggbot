@@ -4,15 +4,17 @@ using System.Threading.Tasks;
 
 using Discord.Commands;
 
+using TimeZoneConverter;
+
 namespace Gruggbot.Core.CommandModules
 {
     internal class ShadowlandsCountdownProvider
     {
-        private readonly DateTime releaseDateUTC = 
+        private readonly DateTime releaseDateUTC =
             new DateTime(2020, 10, 26, 23, 0, 0, DateTimeKind.Utc);
 
-        private readonly DateTime prePatchDateUTC = 
-            new DateTime(2020, 10, 6, 00, 0, 0, DateTimeKind.Utc);  
+        private readonly DateTime prePatchDateUTC =
+            new DateTime(2020, 10, 6, 00, 0, 0, DateTimeKind.Utc);
 
         private ICommandContext Context { get; set; }
 
@@ -30,7 +32,7 @@ namespace Gruggbot.Core.CommandModules
 
         private async Task SendImageLogoMessageAsync()
         {
-            string expansionLogoImageLocation = 
+            string expansionLogoImageLocation =
                 $"data/Images/Shadowlands_Logo.png";
 
             await Context.Channel.SendFileAsync(expansionLogoImageLocation);
@@ -40,12 +42,12 @@ namespace Gruggbot.Core.CommandModules
         {
             string releaseMessage = BuildReleaseCountdownMessage();
 
-            string expansionReleaseMapImageLocation = 
+            string expansionReleaseMapImageLocation =
                 $"data/Images/ShadowlandsGlobalTimes.jpg";
-            
+
             await Context.Channel
                 .SendFileAsync(
-                expansionReleaseMapImageLocation, 
+                expansionReleaseMapImageLocation,
                 text: releaseMessage
             );
         }
@@ -54,13 +56,12 @@ namespace Gruggbot.Core.CommandModules
         {
             if (IsReleased())
             {
-                return "The Gates are Open, " + 
-                    "World of Warcraft: Shadowlands is out, go play!!!";
+                return "The Gates are Open, World of Warcraft: Shadowlands is out, go play!!!";
             }
 
             TimeSpan releaseCountdown = CalculateReleaseCountdown();
 
-            DateTime releaseDateAustralia = 
+            DateTime releaseDateAustralia =
                 ConvertToAUSEasternStandardTimeFromUTC(this.releaseDateUTC);
 
             StringBuilder sb = new StringBuilder();
@@ -90,8 +91,8 @@ namespace Gruggbot.Core.CommandModules
 
         private DateTime ConvertToAUSEasternStandardTimeFromUTC(DateTime dateUTC)
         {
-            TimeZoneInfo aestZoneInfo = 
-                TimeZoneInfo.FindSystemTimeZoneById("AUS Eastern Standard Time");
+            // TZConvert will get the appropriate TimeZoneInfo, no matter which OS we're running on.
+            TimeZoneInfo aestZoneInfo = TZConvert.GetTimeZoneInfo("Australia/Sydney");
 
             return TimeZoneInfo.ConvertTimeFromUtc(dateUTC, aestZoneInfo);
         }
@@ -104,7 +105,7 @@ namespace Gruggbot.Core.CommandModules
 
         private string BuildPrePatchETAMessage()
         {
-            DateTime prepatchDateAustralia = 
+            DateTime prepatchDateAustralia =
                 ConvertToAUSEasternStandardTimeFromUTC(this.prePatchDateUTC);
 
             StringBuilder sb = new StringBuilder();
