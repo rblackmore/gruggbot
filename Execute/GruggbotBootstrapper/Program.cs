@@ -1,47 +1,45 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿// <copyright file="Program.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
-using Gruggbot.Core.DependencyInjection;
-
-using GruggbotBootstrapper.Logging;
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-
-using Serilog;
+#pragma warning disable SA1600 // Elements should be documented
 
 namespace GruggbotBootstrapper
 {
-    class Program
-    {
-        static async Task Main(string[] args)
-        {
-            LoggingSetup.ConfigureLogging(CurrentEnvironment);
+    using System;
+    using System.Threading.Tasks;
 
+    using Gruggbot.Core.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Serilog;
+
+    public static class Program
+    {
+        public static async Task Main(string[] args)
+        {
             try
             {
-                await CreateHostBuilder(args).Build().RunAsync();
+                await CreateHostBuilder(args).Build().RunAsync().ConfigureAwait(true);
             }
             catch (Exception ex)
             {
-                Log.Logger.Error(ex.Message);
+                Log.Logger.Fatal(ex.Message);
             }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseEnvironment(CurrentEnvironment)
                 .ConfigureServices((context, services) =>
                 {
                     services.AddBot(context.Configuration);
-                    //services.AddHostedService<App>();
+                    services.AddHostedService<App>();
                 })
-                .UseSerilog();
-
-        public static string CurrentEnvironment
-        {
-            get =>
-                Environment.GetEnvironmentVariable("CONSOLENETCORE_ENVIRONMENT") ?? Environments.Production;
-        }
+                .UseSerilog((context, loggerConfiguration) =>
+                {
+                    loggerConfiguration.ReadFrom.Configuration(context.Configuration)
+                        .Enrich.FromLogContext()
+                        .WriteTo.Console();
+                });
     }
 }

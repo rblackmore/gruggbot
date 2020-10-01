@@ -1,0 +1,46 @@
+﻿[*.cs]
+
+# SA1649: File name should match first type name
+dotnet_diagnostic.SA1649.severity = silent
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = suggestion
+
+# SA1633: File should have header
+dotnet_diagnostic.SA1633.severity = silent
+
+# SA1503: Braces should not be omitted
+dotnet_diagnostic.SA1503.severity = silent
+
+# SA1127: Generic type constraints should be on their own line
+dotnet_diagnostic.SA1127.severity = silent
+
+# CA1303: Do not pass literals as localized parameters
+dotnet_diagnostic.CA1303.severity = silent
+
+# CA1031: Do not catch general exception types
+dotnet_diagnostic.CA1031.severity = silent;
+
+# SA1600: Elements should be documented
+dotnet_diagnostic.SA1600.severity = silent
+
+# IDE0018: Inline variable declaration
+csharp_style_inlined_variable_declaration = true:silent
+
+# IDE0016: Use 'throw' expression
+csharp_style_throw_expression = true:silent
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_event = false:silent
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_field = false:silent
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_method = false:silent
+
+# IDE0003: Remove qualification
+dotnet_style_qualification_for_property = false:silent
+
+# SA1124: Do not use regions
+dotnet_diagnostic.SA1124.severity = silent

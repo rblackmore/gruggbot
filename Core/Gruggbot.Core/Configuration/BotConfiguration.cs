@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Gruggbot.Core.Configuration
+﻿namespace Gruggbot.Core.Configuration
 {
     public class BotConfiguration
     {

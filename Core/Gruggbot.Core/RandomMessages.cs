@@ -1,112 +1,159 @@
-﻿using Discord;
-using Discord.WebSocket;
-using Gruggbot.Core.Helpers;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="RandomMessages.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
 namespace Gruggbot.Core
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Discord;
+    using Discord.WebSocket;
+    using Gruggbot.Core.Configuration;
+    using Gruggbot.Core.Helpers;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
+
+    /// <summary>
+    /// Class which provides random message responses to a discord server.
+    /// </summary>
     public class RandomMessages
     {
-        private const float DEFAULTCHANCE = 50f;
-        private const float CHANCEINCREMENT = 10f;
-        private float _chance = DEFAULTCHANCE;
+        private readonly ILogger<RandomMessages> logger;
+        private readonly RandomMessagesConfiguration options;
+        private readonly DiscordSocketClient discordClient;
 
-        private DiscordSocketClient _discordClient;
-        private ILogger<RandomMessages> _logger;
-        private IServiceProvider _serviceProvider;
+        private readonly Random rando = new Random();
+        private float chancePercentage;
 
-        public RandomMessages(DiscordSocketClient discordClient, ILogger<RandomMessages> logger, IServiceProvider serviceProvider)
+        public RandomMessages(
+            ILogger<RandomMessages> logger,
+            IOptions<RandomMessagesConfiguration> options,
+            DiscordSocketClient discordClient)
         {
-            _discordClient = discordClient;
-            _logger = logger;
-            _serviceProvider = serviceProvider;
+            if (options == null)
+                throw new ArgumentNullException(nameof(options));
+
+            if (discordClient == null)
+                throw new ArgumentNullException(nameof(discordClient));
+
+            this.logger = logger;
+            this.options = options.Value;
+            this.discordClient = discordClient;
+
+            this.chancePercentage = this.options.DefaultChance;
         }
 
+        /// <summary>
+        /// Registers several response delegates with The MessageReceived Event.
+        /// </summary>
         public void Setup()
         {
-            _discordClient.MessageReceived += ShenanigansResponse;
-            _discordClient.MessageReceived += BananaReaction;
-            _discordClient.MessageReceived += WelcomeBack;
+            this.discordClient.MessageReceived += this.RandomResponses;
+            this.discordClient.MessageReceived += this.GuaranteedResponses;
 
-            _logger.LogInformation($"RandomMessages Initiated");
+            this.logger.LogInformation($"RandomMessages Initiated");
         }
 
-        private async Task WelcomeBack(SocketMessage message)
+        /// <summary>
+        /// Responds to a User Message with one of several responses.
+        /// Depending on message content, and current response chance.
+        /// Only responds to User Messages.
+        /// </summary>
+        /// <param name="message">Received Message to respond to.</param>
+        private async Task RandomResponses(SocketMessage message)
         {
-
-            if (!MessageContentCheckHelper.IsSocketUserMessage(message, out SocketUserMessage userMessage))
+            if (message.Author.IsBot)
                 return;
 
-            if (message.Content.ToLower().Contains("welcome back") && MessageContentCheckHelper.BotMentioned(_discordClient, userMessage))
+            if (message.TryCastSocketUserMessage(out SocketUserMessage userMessage))
+                return;
+
+            if (!this.ShouldReact())
+                return;
+
+            await this.BananaReaction(userMessage).ConfigureAwait(true);
+
+            await this.ShenanigansResponse(userMessage).ConfigureAwait(true);
+        }
+
+        /// <summary>
+        /// Responds to a User Message with one of several responses.
+        /// Depending on message content.
+        /// Only Responds to User Messages.
+        /// </summary>
+        /// <param name="message">Received Message to respond to.</param>
+        private async Task GuaranteedResponses(SocketMessage message)
+        {
+            if (message.Author.IsBot)
+                return;
+
+            if (message.TryCastSocketUserMessage(out SocketUserMessage userMessage))
+                return;
+
+            await this.WelcomeBack(userMessage).ConfigureAwait(true);
+        }
+
+        private async Task WelcomeBack(SocketUserMessage userMessage)
+        {
+            if (!userMessage.Content.Contains("welcome back", StringComparison.InvariantCultureIgnoreCase))
+                return;
+
+            if (userMessage.IsUserMentioned(this.discordClient.CurrentUser))
             {
                 var channel = userMessage.Channel;
                 var author = userMessage.Author;
 
-                await channel.SendMessageAsync($"Thank you {author.Mention}");
+                await channel.SendMessageAsync($"Thank you {author.Mention}").ConfigureAwait(true);
             }
         }
 
-        public async Task ShenanigansResponse(SocketMessage message)
+        private async Task ShenanigansResponse(SocketUserMessage userMessage)
         {
-            Random rando = new Random();
-
-            double execute = rando.NextDouble() * 100;
-
-            if (!MessageContentCheckHelper.IsSocketUserMessage(message, out SocketUserMessage userMessage))
-                return;
-
-            if (userMessage.Content.ToLowerInvariant().Contains("shenanigans"))
+            if (userMessage.Content.Contains("shenanigans", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (execute > _chance)
-                {
-                    _chance += CHANCEINCREMENT;
-                    _logger.Log(LogLevel.Trace,$"Chance increased to {_chance}");
-                    return;
-                }
-
-                _chance = DEFAULTCHANCE;
-
-
-                var channel = userMessage.Channel;
-                var author = userMessage.Author;
-
-                await channel.SendMessageAsync($"Pistol whips {author.Mention}");
-
-                _logger.LogInformation("{Author} was Pistol Whipped in {Channel}", author.Username, channel.Name);
+                await userMessage.Channel.SendMessageAsync($"Pistol whips {userMessage.Author.Mention}")
+                    .ConfigureAwait(true);
             }
         }
 
-        public async Task BananaReaction(SocketMessage message)
+        private async Task BananaReaction(SocketUserMessage userMessage)
         {
+            if (userMessage.Content.Contains("banana", StringComparison.InvariantCultureIgnoreCase))
+                await userMessage.AddReactionAsync(new Emoji("🍌")).ConfigureAwait(true);
+        }
 
-            Random rando = new Random();
+        #region Helper Methods
+        private bool ShouldReact()
+        {
+            double roll = this.Roll();
 
-            double execute = rando.NextDouble() * 100;
+            this.logger.LogTrace("Rolled: {0}", roll);
 
-            if (!MessageContentCheckHelper.IsSocketUserMessage(message, out SocketUserMessage userMessage))
-                return;
-
-            if (userMessage.Content.ToLowerInvariant().Contains("banana"))
+            if (roll > this.chancePercentage)
             {
-                if (execute > _chance)
-                {
-                    _chance += CHANCEINCREMENT;
-                    _logger.Log(LogLevel.Trace, $"Chance increased to {_chance}");
-                    return;
-                }
-
-                _chance = DEFAULTCHANCE;
-                _logger.Log(LogLevel.Trace, $"Chance reset to {DEFAULTCHANCE}");
-
-                await userMessage.AddReactionAsync(new Emoji("🍌"));
-
-                _logger.LogInformation("Banana Reaction given to {Author} in {Channel}", userMessage.Author.Username, userMessage.Channel.Name);
+                this.IncrementChance();
+                return false;
             }
 
+            this.ResetChance();
+            return true;
         }
+
+        private double Roll(int max = 100)
+        {
+            return this.rando.NextDouble() * max;
+        }
+
+        private void ResetChance()
+        {
+            this.chancePercentage = this.options.DefaultChance;
+        }
+
+        private void IncrementChance()
+        {
+            this.chancePercentage += this.options.ChanceIncrement;
+        }
+        #endregion
     }
 }

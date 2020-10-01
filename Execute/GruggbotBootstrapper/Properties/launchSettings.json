@@ -3,7 +3,7 @@
     "GruggbotBootstrapper": {
       "commandName": "Project",
       "environmentVariables": {
-        "CONSOLENETCORE_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development"
       }
     },
     "Docker": {

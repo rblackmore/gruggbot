@@ -1,46 +1,36 @@
-﻿using System;
-using System.Diagnostics.Eventing.Reader;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿// <copyright file="App.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
 namespace GruggbotBootstrapper
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+
+    /// <summary>
+    /// Test Host Service.
+    /// </summary>
     public class App : IHostedService
     {
         private readonly ILogger<App> logger;
+        private readonly IHostEnvironment hostEnvironment;
         private readonly IConfiguration configuration;
 
-        public App(ILogger<App> logger, IConfiguration configuration)
+        public App(ILogger<App> logger, IHostEnvironment hostEnvironment, IConfiguration configuration)
         {
             this.logger = logger;
+            this.hostEnvironment = hostEnvironment;
             this.configuration = configuration;
+
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("Beggining Timezone loop");
-
-            this.logger.LogInformation("TimeZone Count: " + TimeZoneInfo.GetSystemTimeZones().Count);
-
-            foreach (var tz in TimeZoneInfo.GetSystemTimeZones())
-            {
-                this.logger.LogInformation(tz.Id);
-            }
-
-            try
-            {
-                var info = TimeZoneInfo.FindSystemTimeZoneById("Australia/Melbourne");
-                this.logger.LogInformation($"{info.StandardName}: {info.Id}");
-            }
-            catch (Exception ex)
-            {
-                this.logger.LogError(ex.Message);
-            }
-
+            this.logger.LogInformation("Environment: {0}", this.hostEnvironment.EnvironmentName);
             return Task.CompletedTask;
         }
 

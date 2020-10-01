@@ -21,29 +21,5 @@ namespace Gruggbot.Core.Helpers
 
             return true;
         }
-
-        internal static bool IsSocketUserMessage(SocketMessage message, out SocketUserMessage userMessage)
-        {
-
-            bool isUserMessage = false;
-
-            userMessage = (message as SocketUserMessage);
-
-            if (userMessage != null)
-                isUserMessage = true;
-
-            return isUserMessage;
-        }
-
-        internal static bool BotMentioned(DiscordSocketClient client, SocketUserMessage msg)
-        {
-            foreach (SocketUser mentionedUser in msg.MentionedUsers)
-            {
-                if (mentionedUser.Id == client.CurrentUser.Id)
-                    return true;
-            }
-
-            return false;
-        }
     }
 }

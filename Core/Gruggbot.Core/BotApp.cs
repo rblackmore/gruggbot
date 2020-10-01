@@ -23,20 +23,20 @@ namespace Gruggbot.Core
     /// </summary>
     public class BotApp : IHostedService
     {
-        private BotConfiguration _configuration;
-        private ILogger<BotApp> _logger;
-        private IServiceProvider _serviceProvider;
-        private DiscordSocketClient _discordClient;
-        private CommandService _commands;
+        private readonly BotConfiguration _options;
+        private readonly ILogger<BotApp> _logger;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly DiscordSocketClient _discordClient;
+        private readonly CommandService _commands;
 
         public BotApp(
             ILogger<BotApp> logger, 
-            IOptions<BotConfiguration> configuration, 
+            IOptions<BotConfiguration> options, 
             DiscordSocketClient discordClient,
             CommandService commands, 
             IServiceProvider serviceProvider)
         {
-            _configuration = configuration.Value;
+            _options = options.Value;
             _logger = logger;
             _serviceProvider = serviceProvider;
             _discordClient = discordClient;
@@ -52,7 +52,7 @@ namespace Gruggbot.Core
 
             await InstallCommands(_serviceProvider);
 
-            string token = _configuration.Token;
+            string token = _options.Token;
 
             if (String.IsNullOrEmpty(token))
             {
@@ -71,7 +71,7 @@ namespace Gruggbot.Core
 
         private Task Client_Connected()
         {
-            _logger.LogInformation($"Connected as {_discordClient.CurrentUser.Username}");
+            _logger.LogInformation("Connected as: {0}", _discordClient.CurrentUser.Username);
             return Task.CompletedTask;
         }
 
@@ -87,29 +87,28 @@ namespace Gruggbot.Core
             await _commands.AddModuleAsync<WarcraftModule>(serviceProvider);
         }
 
-        private async Task HandleCommand(SocketMessage msg)
+        private async Task HandleCommand(SocketMessage message)
         {
-            if (!MessageContentCheckHelper.IsSocketUserMessage(msg, out SocketUserMessage message))
+            if (message.TryCastSocketUserMessage(out SocketUserMessage userMessage))
                 return;
 
-            if (!MessageContentCheckHelper.HasPrefix(_discordClient, message, _configuration.Prefix, out int argPos))
+            if (!MessageContentCheckHelper.HasPrefix(_discordClient, userMessage, _options.Prefix, out int argPos))
                 return;
 
             //Create Command Context
-            var context = new CommandContext(_discordClient, message);
+            var context = new CommandContext(_discordClient, userMessage);
 
             //Execute the command. (result does not indicate a return value,
             //rather an object stating if the command executed successfully
             var result = await _commands.ExecuteAsync(context, argPos, _serviceProvider);
             
             if (!result.IsSuccess)
-                _logger.LogError("{@error} {@message}", result.ErrorReason, message.Content);
+                _logger.LogError("{@error} {@message}", result.ErrorReason, userMessage.Content);
         }
 
         private Task DiscordLogEvent(LogMessage msg)
         {
-            //_logger.LogInformation("{0}", msg.ToString());
-            _logger.LogInformation(msg.ToString());
+            _logger.LogInformation("DiscordClient: {0}", msg.Message);
             return Task.CompletedTask;
         }
     }
