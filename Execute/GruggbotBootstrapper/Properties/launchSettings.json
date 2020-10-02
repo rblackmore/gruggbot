@@ -9,7 +9,7 @@
     "Docker": {
       "commandName": "Docker",
       "environmentVariables": {
-        "CONSOLENETCORE_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development"
       }
     }
   }

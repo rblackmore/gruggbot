@@ -44,3 +44,6 @@ dotnet_style_qualification_for_property = false:silent
 
 # SA1124: Do not use regions
 dotnet_diagnostic.SA1124.severity = silent
+
+# CA2000: Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = silent

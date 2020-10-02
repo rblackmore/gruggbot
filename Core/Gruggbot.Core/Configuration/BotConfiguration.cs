@@ -3,7 +3,10 @@
     public class BotConfiguration
     {
         public const string Bot = "Bot";
+
         public string Token { get; set; }
-        public char Prefix { get; set; }
+
+        public CommandHandlerConfiguration Commands { get; set; }
+
     }
 }

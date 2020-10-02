@@ -1,5 +1,6 @@
 ﻿namespace Gruggbot.Core.Helpers
 {
+    using Discord.Commands;
     using Discord.WebSocket;
 
     public static class SocketMessageExtensions
@@ -16,15 +17,25 @@
             return isUserMessage;
         }
 
-        internal static bool IsUserMentioned(this SocketUserMessage message, SocketUser user)
+        internal static bool IsUserMentioned(this SocketUserMessage userMessage, SocketUser user)
         {
-            foreach (SocketUser mentionedUser in message.MentionedUsers)
+            foreach (SocketUser mentionedUser in userMessage.MentionedUsers)
             {
                 if (mentionedUser.Id == user.Id)
                     return true;
             }
 
             return false;
+        }
+
+        internal static bool HasPrefix(this SocketUserMessage userMessage, SocketUser user, char prefix, out int argPos)
+        {
+            argPos = -1;
+
+            var hasCharPrefix = userMessage.HasCharPrefix(prefix, ref argPos);
+            var hasMentionPrefix = userMessage.HasMentionPrefix(user, ref argPos);
+
+            return hasCharPrefix || hasMentionPrefix;
         }
     }
 }

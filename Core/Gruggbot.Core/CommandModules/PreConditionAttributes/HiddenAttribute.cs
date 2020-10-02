@@ -1,11 +1,14 @@
-﻿using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="HiddenAttribute.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
 namespace Gruggbot.Core.CommandModules
 {
+    using System;
+    using System.Threading.Tasks;
+
+    using Discord.Commands;
+
     public class HiddenAttribute : PreconditionAttribute
     {
         public override Task<PreconditionResult> CheckPermissionsAsync(ICommandContext context, CommandInfo command, IServiceProvider services)

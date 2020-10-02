@@ -1,20 +1,19 @@
-﻿using System;
-using System.Text;
-using System.Threading.Tasks;
-
-using Discord.Commands;
-
-using TimeZoneConverter;
-
-namespace Gruggbot.Core.CommandModules
+﻿namespace Gruggbot.Core.CommandModules
 {
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Discord.Commands;
+    using TimeZoneConverter;
+
     internal class ShadowlandsCountdownProvider
     {
         private readonly DateTime releaseDateUTC =
             new DateTime(2020, 10, 26, 23, 0, 0, DateTimeKind.Utc);
 
         private readonly DateTime prePatchDateUTC =
-            new DateTime(2020, 10, 6, 00, 0, 0, DateTimeKind.Utc);
+            new DateTime(2020, 10, 13, 00, 0, 0, DateTimeKind.Utc);
 
         private ICommandContext Context { get; set; }
 

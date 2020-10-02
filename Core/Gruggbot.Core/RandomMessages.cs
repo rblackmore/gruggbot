@@ -72,9 +72,9 @@ namespace Gruggbot.Core
             if (!this.ShouldReact())
                 return;
 
-            await this.BananaReaction(userMessage).ConfigureAwait(true);
+            await this.BananaReaction(userMessage).ConfigureAwait(false);
 
-            await this.ShenanigansResponse(userMessage).ConfigureAwait(true);
+            await this.ShenanigansResponse(userMessage).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Gruggbot.Core
             if (message.TryCastSocketUserMessage(out SocketUserMessage userMessage))
                 return;
 
-            await this.WelcomeBack(userMessage).ConfigureAwait(true);
+            await this.WelcomeBack(userMessage).ConfigureAwait(false);
         }
 
         private async Task WelcomeBack(SocketUserMessage userMessage)
@@ -104,7 +104,7 @@ namespace Gruggbot.Core
                 var channel = userMessage.Channel;
                 var author = userMessage.Author;
 
-                await channel.SendMessageAsync($"Thank you {author.Mention}").ConfigureAwait(true);
+                await channel.SendMessageAsync($"Thank you {author.Mention}").ConfigureAwait(false);
             }
         }
 
@@ -113,14 +113,14 @@ namespace Gruggbot.Core
             if (userMessage.Content.Contains("shenanigans", StringComparison.InvariantCultureIgnoreCase))
             {
                 await userMessage.Channel.SendMessageAsync($"Pistol whips {userMessage.Author.Mention}")
-                    .ConfigureAwait(true);
+                    .ConfigureAwait(false);
             }
         }
 
         private async Task BananaReaction(SocketUserMessage userMessage)
         {
             if (userMessage.Content.Contains("banana", StringComparison.InvariantCultureIgnoreCase))
-                await userMessage.AddReactionAsync(new Emoji("🍌")).ConfigureAwait(true);
+                await userMessage.AddReactionAsync(new Emoji("🍌")).ConfigureAwait(false);
         }
 
         #region Helper Methods

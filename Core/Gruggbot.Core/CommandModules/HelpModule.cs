@@ -1,6 +1,5 @@
 ﻿using Discord.Commands;
 using Gruggbot.Core.DiscordExtensions;
-using Gruggbot.Core.Logging;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -65,8 +64,6 @@ namespace Gruggbot.Core.CommandModules
 
             sb.AppendLine("```Markdown\nUser 'help <command>' or 'help <module>' for more information\n```");
             await ReplyAsync(sb.ToString()).ConfigureAwait(false);
-
-            _logger.LogCommandCall(Context.Message.Author.Username, "Help");
         }
 
         [Command("help", RunMode = RunMode.Async), Summary("Displays a very helpful message about a Command or Command Module")]
