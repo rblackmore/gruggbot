@@ -33,13 +33,12 @@ namespace GruggbotBootstrapper
                 .ConfigureServices((context, services) =>
                 {
                     services.AddBot(context.Configuration);
-                    services.AddHostedService<App>();
+                    // services.AddHostedService<App>();
                 })
                 .UseSerilog((context, loggerConfiguration) =>
                 {
                     loggerConfiguration.ReadFrom.Configuration(context.Configuration)
-                        .Enrich.FromLogContext()
-                        .WriteTo.Console();
+                        .Enrich.FromLogContext();
                 });
     }
 }

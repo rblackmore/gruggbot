@@ -31,6 +31,9 @@ namespace GruggbotBootstrapper
         public Task StartAsync(CancellationToken cancellationToken)
         {
             this.logger.LogInformation("Environment: {0}", this.hostEnvironment.EnvironmentName);
+
+            this.logger.LogInformation("Serilog Sink 0: {0}", this.configuration.GetSection("Serilog:WriteTo:0:Name").Value);
+            this.logger.LogInformation("Serilog Sink 1: {0}", this.configuration.GetSection("Serilog:WriteTo:1:Name").Value);
             return Task.CompletedTask;
         }
 
