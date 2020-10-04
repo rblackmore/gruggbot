@@ -32,8 +32,8 @@ namespace GruggbotBootstrapper
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
-                    services.AddBot(context.Configuration);
                     // services.AddHostedService<App>();
+                    services.AddBot(context.Configuration);
                 })
                 .UseSerilog((context, loggerConfiguration) =>
                 {

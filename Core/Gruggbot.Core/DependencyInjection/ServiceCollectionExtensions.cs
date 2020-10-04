@@ -5,9 +5,9 @@
 namespace Gruggbot.Core.DependencyInjection
 {
     using System;
+
     using Discord.Commands;
     using Discord.WebSocket;
-    using Gruggbot.Core.CommandModules;
     using Gruggbot.Core.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -19,22 +19,18 @@ namespace Gruggbot.Core.DependencyInjection
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
-            services.ConfigureBot(configuration);
+            var commandConfig = configuration
+                .GetSection(CommandHandlerConfiguration.CommandServiceConfig)
+                .Get<CommandServiceConfig>();
 
-            services.AddHostedService<BotApp>();
+            services.Configure<BotConfiguration>(configuration.GetSection(BotConfiguration.Bot));
 
             services.AddSingleton<DiscordSocketClient>();
-            services.AddSingleton<CommandService>();
+            services.AddSingleton(new CommandService(commandConfig));
+
+            services.AddHostedService<BotApp>();
             services.AddSingleton<CommandHandler>();
-
             services.AddSingleton<RandomMessages>();
-
-            return services;
-        }
-
-        private static IServiceCollection ConfigureBot(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.Configure<BotConfiguration>(configuration.GetSection(BotConfiguration.Bot));
 
             return services;
         }

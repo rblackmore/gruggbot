@@ -10,10 +10,10 @@ namespace Gruggbot.Core.CommandModules
     using Microsoft.Extensions.Logging;
 
     [Summary("Module for running tests during runtime.")]
-    [Hidden]
+    [RequireOwner]
     public class TestingModule : ModuleBase
     {
-        private ILogger<TestingModule> logger;
+        private readonly ILogger<TestingModule> logger;
 
         public TestingModule(ILogger<TestingModule> logger)
         {
@@ -22,7 +22,6 @@ namespace Gruggbot.Core.CommandModules
 
         [Command("log")]
         [Summary("Logs an information message with the current logging framework.")]
-        [Hidden]
         public async Task LogMessage(string message)
         {
             this.logger.LogInformation("Message logged: {message}", message);

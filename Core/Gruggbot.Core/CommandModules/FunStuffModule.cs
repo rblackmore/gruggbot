@@ -1,43 +1,38 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-
-using Discord.Commands;
-
-using Microsoft.Extensions.Logging;
+﻿// <copyright file="FunStuffModule.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
 namespace Gruggbot.Core.CommandModules
 {
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Discord.Commands;
+    using Microsoft.Extensions.Logging;
+
     [Summary("Random fun commands to play with")]
     public class FunStuffModule : ModuleBase
     {
-        private readonly ILogger<FunStuffModule> _logger;
+        private readonly ILogger<FunStuffModule> logger;
 
         public FunStuffModule(ILogger<FunStuffModule> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
-        [Command("say"), Summary("Echos a message.")]
+        [Command("say")]
+        [Summary("Echos a message.")]
         public async Task Say([Remainder, Summary("The text to echo")] string echo)
         {
-            await ReplyAsync(echo);
+            await this.ReplyAsync(echo).ConfigureAwait(false);
         }
 
-        [Command("8ball", RunMode = RunMode.Async), Summary("Ask a question, get an answer")]
-        [RequireOwner]
-        [Hidden]
-        public async Task EightBall([Remainder(), Summary("the Question to answer")]string question)
-        {
-            await Task.CompletedTask;
-        }
-
-        [Command("mario"), Summary("It's-a-me Mario!")]
+        [Command("mario")]
+        [Summary("It's-a-me, Mario!")]
         public async Task Mario()
         {
-
             StringBuilder top = new StringBuilder();
             StringBuilder bot = new StringBuilder();
-
 
             top.AppendLine(":black_circle: :black_circle: :black_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle:");
             top.AppendLine(":black_circle: :black_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle: :red_circle:");
@@ -57,17 +52,15 @@ namespace Gruggbot.Core.CommandModules
             bot.AppendLine(":black_circle: :chestnut: :chestnut: :chestnut: :black_circle: :black_circle: :black_circle: :black_circle: :chestnut: :chestnut: :chestnut:");
             bot.AppendLine(":chestnut: :chestnut: :chestnut: :chestnut: :black_circle: :black_circle: :black_circle: :black_circle: :chestnut: :chestnut: :chestnut: :chestnut:");
 
-
-            await ReplyAsync(top.ToString());
-            await ReplyAsync(bot.ToString());
+            await this.ReplyAsync(top.ToString()).ConfigureAwait(false);
+            await this.ReplyAsync(bot.ToString()).ConfigureAwait(false);
         }
 
-        [Command("hjälp", RunMode = RunMode.Async), Summary("no hablar español")]
+        [Command("hjälp")]
         [Hidden]
         public async Task HjalpCmd()
         {
-            await ReplyAsync("No Hablar Español");
+            await this.ReplyAsync("No Hablar Español").ConfigureAwait(false);
         }
-
     }
 }

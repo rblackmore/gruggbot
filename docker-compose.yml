@@ -3,7 +3,7 @@ version: '3.4'
 services:
   gruggbotbootstrapper:
     image: ${DOCKER_REGISTRY-}gruggbotbootstrapper
-    container_name: gruggbot_main
+    container_name: gruggbot
     build:
       context: .
       dockerfile: Execute/GruggbotBootstrapper/Dockerfile

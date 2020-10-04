@@ -1,29 +1,33 @@
-﻿using Discord;using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="InfoCommandModule.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
 namespace Gruggbot.Core.CommandModules
 {
+    using System;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Discord;
+    using Discord.Commands;
+
     [Group("InfoModule")]
     [Alias("info")]
     [Summary("Provides Information about the Bot or Users")]
+    [RequireOwner]
     public class InfoCommandModule : ModuleBase
     {
         [Command]
-        [Hidden]
         public async Task Default()
         {
-            await ReplyAsync("Hello, my name is Gruggbot");
+            await this.ReplyAsync("Hello, my name is Gruggbot").ConfigureAwait(false);
         }
 
         [Command("system")]
         [Summary("Sends DirectMessage with details about the host system (Only Available to the bot Owner)")]
-        [RequireOwner]
         public async Task SysInfo()
         {
-            var author = Context.Message.Author;
+            var author = this.Context.Message.Author;
             StringBuilder sb = new StringBuilder();
 
             OperatingSystem OS = Environment.OSVersion;
@@ -33,17 +37,16 @@ namespace Gruggbot.Core.CommandModules
             sb.AppendLine($"OS Platform: {OS.Platform}");
             sb.AppendLine($"OS Version: {OS.VersionString}");
 
-            await author.SendMessageAsync(sb.ToString());
-
-            //await Context.Message.Author.SendMessageAsync($"System Information: {Environment.MachineName}"); 
+            await author.SendMessageAsync(sb.ToString()).ConfigureAwait(false);
         }
 
-        [Command("userinfo"), Summary("Returns info about the current user, or the user parameter, if one is parsed")]
+        [Command("userinfo")]
+        [Summary("Returns info about the current user, or the user parameter, if one is parsed.")]
         [Alias("user", "whois")]
         public async Task UserInfo([Summary("The (optional) user to get info for")] IUser user = null)
         {
-            var userInfo = user ?? Context.Client.CurrentUser;
-            var author = Context.Message.Author;
+            var userInfo = user ?? this.Context.Client.CurrentUser;
+            var author = this.Context.Message.Author;
 
             StringBuilder sb = new StringBuilder();
 
@@ -54,7 +57,7 @@ namespace Gruggbot.Core.CommandModules
             sb.AppendLine($"Current Activity: {userInfo.Activity}");
             sb.AppendLine($"Avatar URL: {userInfo.GetAvatarUrl()}");
 
-            await author.SendMessageAsync(sb.ToString());
+            await author.SendMessageAsync(sb.ToString()).ConfigureAwait(false);
         }
     }
 }

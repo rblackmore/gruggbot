@@ -1,49 +1,39 @@
-﻿using Discord.Commands;
-using Gruggbot.Core.DiscordExtensions;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruggbot.Core.CommandModules
+﻿namespace Gruggbot.Core.CommandModules
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
+    using Discord.Commands;
+    using Gruggbot.Core.DiscordExtensions;
+    using Microsoft.Extensions.Logging;
+
     [Summary("Helpful Information about the commands available")]
     public class HelpModule : ModuleBase
     {
-        private ILogger<HelpModule> _logger;
-        private CommandService _commands;
-        private IServiceProvider _map;
+        private ILogger<HelpModule> logger;
+        private CommandService commandService;
+        private IServiceProvider serviceProvider;
 
-        public HelpModule(ILogger<HelpModule> logger, CommandService commands, IServiceProvider map)
+        public HelpModule(ILogger<HelpModule> logger, CommandService commands, IServiceProvider serviceProvider)
         {
-            _logger = logger;
-            _commands = commands;
-            _map = map;
+            this.logger = logger;
+            this.commandService = commands;
+            this.serviceProvider = serviceProvider;
         }
 
-        [Command("help", RunMode = RunMode.Async), Summary("Displays a very helpful message")]
+        [Command("help")]
+        [Summary("Displays a very helpful message")]
         public async Task Help()
         {
-            //Obtain list of Modules, that contain executable commands by the calling user. That are not submodules, and are not hidden
-            var modules =
-                from module in await _commands.Modules.CheckConditions(Context, _map).ConfigureAwait(false)
-                where !module.IsSubmodule
-                where !module.Preconditions.Any(pc => pc is HiddenAttribute)
-                select new
-                {
-                    Name = module.Name,
-                    Summary = module.Summary,
-                    SubModuleNames = module.Submodules.Select(sm => sm.Name),
-                    SubModules = module.Submodules,
-                    AliasCount = module.Aliases.Count,
-                    Alias = module.Aliases.FirstOrDefault(), //TODO: check this out, can i use the full list or do i need to jsut get one?
-                    Commands = module.Commands.Where(c => !c.Preconditions.Any(pc => pc is HiddenAttribute)).GetCommandListStringAsync(Context, _map).Result
-                };
+            var modules = this.GetAvailableTopLevelModuleHelpInfo();
 
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"```Markdown\nAvailable Commands for {Context.Message.Author.Username}```");
+
+            sb.AppendLine($"```Markdown\nAvailable Commands for {this.Context.Message.Author.Username}```");
 
             int i = 0;
 
@@ -52,29 +42,41 @@ namespace Gruggbot.Core.CommandModules
                 i++;
                 sb.Append($"**{i}. {mod.Name}** - ");
 
-                if (mod.Commands.Count() > 0)
-                    sb.AppendLine($"`{String.Join("`, `", mod.Commands)}`");
+                if (mod.Commands.Any())
+                    sb.AppendLine($"`{string.Join("`, `", mod.Commands)}`");
 
-                if (mod.SubModuleNames.Count() > 0)
-                    sb.AppendLine($"*SubModules*: **{String.Join("**, **", mod.SubModuleNames)}**");
+                if (mod.SubModuleNames.Any())
+                    sb.AppendLine($"*SubModules*: **{string.Join("**, **", mod.SubModuleNames)}**");
 
-                if (mod.Commands.Count() == 0 && mod.SubModuleNames.Count() == 0)
+                if (mod.Commands.Any() && mod.SubModuleNames.Any())
                     sb.AppendLine("***Module Not Implemented Yet***");
             }
 
             sb.AppendLine("```Markdown\nUser 'help <command>' or 'help <module>' for more information\n```");
-            await ReplyAsync(sb.ToString()).ConfigureAwait(false);
+
+            await this.ReplyAsync(sb.ToString()).ConfigureAwait(false);
         }
 
-        [Command("help", RunMode = RunMode.Async), Summary("Displays a very helpful message about a Command or Command Module")]
-        public async Task Help([Summary("The Command or Command Module to get help for")] string name)
+        private IEnumerable<ModuleHelpInfoModel> GetAvailableTopLevelModuleHelpInfo()
         {
-            bool isModuleLookup = name.ToLower().Contains("module");
+            return this.commandService.Modules
+                 .Where(mod => !mod.IsSubmodule)
+                 .Where(mod => !mod.IsHidden())
+                 .CheckConditions(this.Context, this.serviceProvider)
+                 .GetAwaiter().GetResult()
+                 .Select(mi => ModuleHelpInfoModel.CreateFromModuleInfo(mi, this.Context, this.serviceProvider));
+        }
+
+        [Command("help")]
+        [Summary("Displays a very helpful message about a Command or Command Module")]
+        internal async Task Help([Summary("The Command or Command Module to get help for")] string name)
+        {
+            bool isModuleLookup = name.Contains("module", StringComparison.InvariantCultureIgnoreCase);
             string helpInformation;
             if (isModuleLookup)
-                helpInformation = await HelpModuleLookup(name, Context, _map).ConfigureAwait(false);
+                helpInformation = await HelpModuleLookup(name, Context, serviceProvider).ConfigureAwait(false);
             else
-                helpInformation = await HelpCommandLookup(name, Context, _map).ConfigureAwait(false);
+                helpInformation = await HelpCommandLookup(name, Context, serviceProvider).ConfigureAwait(false);
 
             await ReplyAsync(helpInformation).ConfigureAwait(false);
         }
@@ -91,11 +93,11 @@ namespace Gruggbot.Core.CommandModules
             //var mod = _commands.Modules.CheckConditions(context, map).Result.FirstOrDefault(mi => mi.Name == name);
 
 
-            IEnumerable<ModuleInfo> modules = await _commands.Modules.CheckConditions(Context, _map).ConfigureAwait(false);
+            IEnumerable<ModuleInfo> modules = await commandService.Modules.CheckConditions(Context, serviceProvider).ConfigureAwait(false);
             ModuleInfo module = modules.FirstOrDefault(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
             IEnumerable<string> commandStrings = await module?.Commands
                 .Where(cmd => !cmd.Attributes.Any(att => att is HiddenAttribute))
-                .GetCommandListStringAsync(Context, _map);
+                .GetCommandListStringAsync(Context, serviceProvider);
 
             StringBuilder sb = new StringBuilder();
 
@@ -125,7 +127,7 @@ namespace Gruggbot.Core.CommandModules
 
         private async Task<string> HelpCommandLookup(string commandName, ICommandContext commandContext, IServiceProvider map = null)
         {
-            IEnumerable<CommandInfo> cmds = await _commands.Commands.CheckConditions(commandContext, map).ConfigureAwait(false);
+            IEnumerable<CommandInfo> cmds = await commandService.Commands.CheckConditions(commandContext, map).ConfigureAwait(false);
             CommandInfo command = cmds.FirstOrDefault(ci => ci.Name.Equals(commandName, StringComparison.InvariantCultureIgnoreCase));
 
             StringBuilder sb = new StringBuilder();
