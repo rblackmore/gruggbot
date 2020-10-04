@@ -4,9 +4,9 @@
 
 namespace GruggbotBootstrapper
 {
-    using System;
     using System.Threading;
     using System.Threading.Tasks;
+
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
@@ -25,12 +25,18 @@ namespace GruggbotBootstrapper
             this.logger = logger;
             this.hostEnvironment = hostEnvironment;
             this.configuration = configuration;
-
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             this.logger.LogInformation("Environment: {0}", this.hostEnvironment.EnvironmentName);
+
+            var info = this.hostEnvironment.ContentRootFileProvider.GetFileInfo("/Content/Images/classic.png");
+
+            if (!info.Exists)
+                this.logger.LogError("File {file} does not exist", info.PhysicalPath);
+            else
+                this.logger.LogInformation("File {file} exists", info.PhysicalPath);
 
             this.logger.LogInformation("Serilog Sink 0: {0}", this.configuration.GetSection("Serilog:WriteTo:0:Name").Value);
             this.logger.LogInformation("Serilog Sink 1: {0}", this.configuration.GetSection("Serilog:WriteTo:1:Name").Value);

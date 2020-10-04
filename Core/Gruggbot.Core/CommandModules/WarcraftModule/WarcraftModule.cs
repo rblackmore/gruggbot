@@ -7,22 +7,26 @@ namespace Gruggbot.Core.CommandModules
     using System.Threading.Tasks;
 
     using Discord.Commands;
+    using Microsoft.Extensions.Hosting;
 
     [Summary("Warcraft")]
     public class WarcraftModule : ModuleBase
     {
-        private ShadowlandsCountdownProvider countdownProvider;
+        private readonly ShadowlandsCountdownProvider countdownProvider;
+
+        public WarcraftModule(ShadowlandsCountdownProvider countdownProvider)
+        {
+            this.countdownProvider = countdownProvider;
+        }
 
         [Command("shadowlands")]
         [Summary("Provides a countdown Timer for World of Warcraft: Shadowlands Expansion")]
         [Alias("sl", "wow:sl", "shadowlambs")]
         public async Task ShadowlandsReleaseCommand()
         {
-            this.countdownProvider = new ShadowlandsCountdownProvider(this.Context);
-
-            await this.countdownProvider
-                .SendShadowlandsReleaseCountdownMessagesAsync()
-                .ConfigureAwait(false);
+            await this.countdownProvider.SendImageLogoMessageAsync(this.Context.Channel).ConfigureAwait(false);
+            await this.countdownProvider.SendCountdownTimeMessageAsync(this.Context.Channel).ConfigureAwait(false);
+            await this.countdownProvider.SendPrePatchETAMessageAsync(this.Context.Channel).ConfigureAwait(false);
         }
     }
 }

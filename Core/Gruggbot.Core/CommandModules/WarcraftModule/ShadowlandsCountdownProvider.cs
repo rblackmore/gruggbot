@@ -4,10 +4,10 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    using Discord.Commands;
+    using Discord;
     using TimeZoneConverter;
 
-    internal class ShadowlandsCountdownProvider
+    public class ShadowlandsCountdownProvider
     {
         private readonly DateTime releaseDateUTC =
             new DateTime(2020, 10, 26, 23, 0, 0, DateTimeKind.Utc);
@@ -15,53 +15,42 @@
         private readonly DateTime prePatchDateUTC =
             new DateTime(2020, 10, 13, 00, 0, 0, DateTimeKind.Utc);
 
-        private ICommandContext Context { get; set; }
-
-        public ShadowlandsCountdownProvider(ICommandContext context)
-        {
-            this.Context = context;
-        }
-
-        public async Task SendShadowlandsReleaseCountdownMessagesAsync()
-        {
-            await SendImageLogoMessageAsync();
-            await SendCountdownTimeMessageAsync();
-            await SendPrePatchETAMessageAsync();
-        }
-
-        private async Task SendImageLogoMessageAsync()
+        internal async Task SendImageLogoMessageAsync(IMessageChannel channel)
         {
             string expansionLogoImageLocation =
                 $"data/Images/Shadowlands_Logo.png";
 
-            await Context.Channel.SendFileAsync(expansionLogoImageLocation);
+            await channel.SendFileAsync(expansionLogoImageLocation).ConfigureAwait(false);
         }
 
-        private async Task SendCountdownTimeMessageAsync()
+        internal async Task SendCountdownTimeMessageAsync(IMessageChannel channel)
         {
-            string releaseMessage = BuildReleaseCountdownMessage();
+            string releaseMessage = this.BuildReleaseCountdownMessage();
 
             string expansionReleaseMapImageLocation =
                 $"data/Images/ShadowlandsGlobalTimes.jpg";
 
-            await Context.Channel
-                .SendFileAsync(
-                expansionReleaseMapImageLocation,
-                text: releaseMessage
-            );
+            await channel.SendFileAsync(expansionReleaseMapImageLocation, text: releaseMessage)
+                .ConfigureAwait(false);
+        }
+
+        internal async Task SendPrePatchETAMessageAsync(IMessageChannel channel)
+        {
+            string prepatchMessage = this.BuildPrePatchETAMessage();
+            await channel.SendMessageAsync(prepatchMessage).ConfigureAwait(false);
         }
 
         private string BuildReleaseCountdownMessage()
         {
-            if (IsReleased())
+            if (this.IsReleased())
             {
                 return "The Gates are Open, World of Warcraft: Shadowlands is out, go play!!!";
             }
 
-            TimeSpan releaseCountdown = CalculateReleaseCountdown();
+            TimeSpan releaseCountdown = this.CalculateReleaseCountdown();
 
             DateTime releaseDateAustralia =
-                ConvertToAUSEasternStandardTimeFromUTC(this.releaseDateUTC);
+                this.ConvertToAUSEasternStandardTimeFromUTC(this.releaseDateUTC);
 
             StringBuilder sb = new StringBuilder();
 
@@ -96,16 +85,10 @@
             return TimeZoneInfo.ConvertTimeFromUtc(dateUTC, aestZoneInfo);
         }
 
-        private async Task SendPrePatchETAMessageAsync()
-        {
-            string prepatchMessage = BuildPrePatchETAMessage();
-            await Context.Channel.SendMessageAsync(prepatchMessage);
-        }
-
         private string BuildPrePatchETAMessage()
         {
             DateTime prepatchDateAustralia =
-                ConvertToAUSEasternStandardTimeFromUTC(this.prePatchDateUTC);
+                this.ConvertToAUSEasternStandardTimeFromUTC(this.prePatchDateUTC);
 
             StringBuilder sb = new StringBuilder();
 

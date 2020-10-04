@@ -6,8 +6,9 @@
     <ProjectGuid>baefc944-9905-4c48-8020-ae35cf64ef1b</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
-    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>http://localhost</DockerServiceUrl>
+    <DockerLaunchAction>None</DockerLaunchAction>
+    <DockerServiceUrl>
+    </DockerServiceUrl>
     <DockerServiceName>gruggbotbootstrapper</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>

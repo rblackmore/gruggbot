@@ -8,6 +8,7 @@ namespace Gruggbot.Core.DependencyInjection
 
     using Discord.Commands;
     using Discord.WebSocket;
+    using Gruggbot.Core.CommandModules;
     using Gruggbot.Core.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +32,7 @@ namespace Gruggbot.Core.DependencyInjection
             services.AddHostedService<BotApp>();
             services.AddSingleton<CommandHandler>();
             services.AddSingleton<RandomMessages>();
+            services.AddTransient<ShadowlandsCountdownProvider>();
 
             return services;
         }
