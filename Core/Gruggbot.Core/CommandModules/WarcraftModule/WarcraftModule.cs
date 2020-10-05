@@ -8,6 +8,7 @@ namespace Gruggbot.Core.CommandModules
 
     using Discord.Commands;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
 
     [Summary("Warcraft")]
     public class WarcraftModule : ModuleBase

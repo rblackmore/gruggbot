@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
 
     using Discord;
+    using Microsoft.Extensions.Hosting;
     using TimeZoneConverter;
 
     public class ShadowlandsCountdownProvider
@@ -15,22 +16,29 @@
         private readonly DateTime prePatchDateUTC =
             new DateTime(2020, 10, 13, 00, 0, 0, DateTimeKind.Utc);
 
+        private readonly IHostEnvironment hostEnvironment;
+
+        public ShadowlandsCountdownProvider(IHostEnvironment hostEnvironment)
+        {
+            this.hostEnvironment = hostEnvironment;
+        }
+
         internal async Task SendImageLogoMessageAsync(IMessageChannel channel)
         {
-            string expansionLogoImageLocation =
-                $"data/Images/Shadowlands_Logo.png";
+            var shadowlandsLogo =
+                this.hostEnvironment.ContentRootFileProvider.GetFileInfo("Content/Images/Shadowlands_Logo.png");
 
-            await channel.SendFileAsync(expansionLogoImageLocation).ConfigureAwait(false);
+            await channel.SendFileAsync(shadowlandsLogo.PhysicalPath).ConfigureAwait(false);
         }
 
         internal async Task SendCountdownTimeMessageAsync(IMessageChannel channel)
         {
             string releaseMessage = this.BuildReleaseCountdownMessage();
 
-            string expansionReleaseMapImageLocation =
-                $"data/Images/ShadowlandsGlobalTimes.jpg";
+            var shadowlandsMap =
+                this.hostEnvironment.ContentRootFileProvider.GetFileInfo("Content/Images/ShadowlandsGlobalTimes.jpg");
 
-            await channel.SendFileAsync(expansionReleaseMapImageLocation, text: releaseMessage)
+            await channel.SendFileAsync(shadowlandsMap.PhysicalPath, text: releaseMessage)
                 .ConfigureAwait(false);
         }
 

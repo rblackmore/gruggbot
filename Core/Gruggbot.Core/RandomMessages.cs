@@ -51,8 +51,6 @@ namespace Gruggbot.Core
         {
             this.discordClient.MessageReceived += this.RandomResponses;
             this.discordClient.MessageReceived += this.GuaranteedResponses;
-
-            this.logger.LogInformation($"RandomMessages Initiated");
         }
 
         /// <summary>

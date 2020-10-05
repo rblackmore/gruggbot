@@ -68,8 +68,6 @@ namespace Gruggbot.Core
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            this.logger.LogInformation("Host Stopping");
-
             await this.discordClient.LogoutAsync()
                 .ConfigureAwait(false);
         }
@@ -77,14 +75,41 @@ namespace Gruggbot.Core
         private Task Client_Connected()
         {
             this.logger
-                .LogInformation("Connected as: {0}", this.discordClient.CurrentUser.Username);
+                .LogInformation("Connected as: {botname}", this.discordClient.CurrentUser.Username);
 
             return Task.CompletedTask;
         }
 
         private Task DiscordLogEvent(LogMessage msg)
         {
-            this.logger.LogInformation("DiscordClient: {0}", msg.Message);
+            var message = msg.Message;
+            var source = msg.Source;
+
+            var template = "DiscordClient - {source}: {message}";
+
+            switch (msg.Severity)
+            {
+                case LogSeverity.Critical:
+                    this.logger.LogCritical(msg.Exception, template, source, message);
+                    break;
+                case LogSeverity.Error:
+                    this.logger.LogError(msg.Exception, template, source, message);
+                    break;
+                case LogSeverity.Debug:
+                    this.logger.LogDebug(msg.Exception, template, source, message);
+                    break;
+                case LogSeverity.Warning:
+                    this.logger.LogWarning(msg.Exception, template, source, message);
+                    break;
+                case LogSeverity.Info:
+                    this.logger.LogInformation(msg.Exception, template, source, message);
+                    break;
+                case LogSeverity.Verbose:
+                    this.logger.LogTrace(msg.Exception, template, source, message);
+                    break;
+                default:
+                    break;
+            }
 
             return Task.CompletedTask;
         }
