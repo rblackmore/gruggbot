@@ -29,10 +29,10 @@ namespace Gruggbot.Core.DependencyInjection
             services.AddSingleton<DiscordSocketClient>();
             services.AddSingleton(new CommandService(commandConfig));
 
-            services.AddHostedService<BotApp>();
             services.AddSingleton<CommandHandler>();
             services.AddSingleton<RandomMessages>();
             services.AddTransient<ShadowlandsCountdownProvider>();
+            services.AddHostedService<BotApp>();
 
             return services;
         }

@@ -7,10 +7,11 @@
 namespace GruggbotBootstrapper
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
 
     using Gruggbot.Core.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
     using Serilog;
 
@@ -18,13 +19,22 @@ namespace GruggbotBootstrapper
     {
         public static async Task Main(string[] args)
         {
+            IHost host = null;
+
             try
             {
-                await CreateHostBuilder(args).Build().RunAsync().ConfigureAwait(true);
+                host = CreateHostBuilder(args).Build();
+
+                await host.RunAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
                 Log.Logger.Fatal(ex.Message);
+            }
+            finally
+            {
+                if (host != null)
+                    await host.StopAsync().ConfigureAwait(false);
             }
         }
 

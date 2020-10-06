@@ -9,6 +9,8 @@ services:
       dockerfile: Execute/GruggbotBootstrapper/Dockerfile
     environment:
       DOTNET_ENVIRONMENT: "Development"
+    volumes:
+      - ./Settings/appsettings.json:/app/appsettings.json:ro
 
   seq:
     image: datalust/seq:latest
