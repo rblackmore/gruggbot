@@ -2,12 +2,20 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core.CommandModules
+namespace Gruggbot.CommandModules
 {
     using System.Threading.Tasks;
 
     using Discord.Commands;
     using Microsoft.Extensions.Logging;
+
+    public enum Option
+    {
+        None,
+        Dull,
+        Fancy,
+        Extreme,
+    }
 
     [Summary("Module for running tests during runtime.")]
     [RequireOwner]
@@ -26,6 +34,23 @@ namespace Gruggbot.Core.CommandModules
         {
             this.logger.LogInformation("Message logged: {message}", message);
             await this.ReplyAsync($"Message '{message}' has been logged").ConfigureAwait(false);
+        }
+
+        [Command("multi")]
+        public async Task MultiOptionalParams(string name, string type = null)
+        {
+            if (type == null)
+                this.logger.LogInformation("Type is null");
+
+            this.logger.LogInformation("Name: {name} - Type: {type}", name, type);
+            await this.ReplyAsync(string.Format("Name: {0} - Type: {1}", name, type)).ConfigureAwait(false);
+        }
+
+        [Command("reader")]
+        public async Task ReaderTest(Option selection = Option.None)
+        {
+            this.logger.LogTrace("Option selected is `{option}`", selection);
+            await this.ReplyAsync(string.Format("Selected Option: `{0}`", selection)).ConfigureAwait(false);
         }
     }
 }

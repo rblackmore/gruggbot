@@ -2,14 +2,14 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core.CommandModules
+namespace Gruggbot.CommandModules.Model
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
     using Discord.Commands;
-    using Gruggbot.Core.DiscordExtensions;
+    using Gruggbot.Extensions;
 
     public class ModuleHelpInfoModel
     {

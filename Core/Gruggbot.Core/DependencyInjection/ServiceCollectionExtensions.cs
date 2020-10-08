@@ -2,14 +2,15 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core.DependencyInjection
+namespace Gruggbot.DependencyInjection
 {
     using System;
 
     using Discord.Commands;
     using Discord.WebSocket;
-    using Gruggbot.Core.CommandModules;
-    using Gruggbot.Core.Configuration;
+    using Gruggbot.CommandModules;
+    using Gruggbot.CommandModules.TypeReaders;
+    using Gruggbot.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -20,19 +21,32 @@ namespace Gruggbot.Core.DependencyInjection
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
+            services.AddSingleton<DiscordSocketClient>();
+            services.ConfigureAndAddCommandServices(configuration);
+
+            services.Configure<BotConfiguration>(configuration.GetSection(BotConfiguration.Bot));
+            services.AddHostedService<BotApp>();
+
+            services.AddSingleton<RandomMessages>();
+
+            services.AddTransient<ShadowlandsCountdownProvider>();
+
+            return services;
+        }
+
+        private static IServiceCollection ConfigureAndAddCommandServices(this IServiceCollection services, IConfiguration configuration)
+        {
             var commandConfig = configuration
                 .GetSection(CommandHandlerConfiguration.CommandServiceConfig)
                 .Get<CommandServiceConfig>();
 
-            services.Configure<BotConfiguration>(configuration.GetSection(BotConfiguration.Bot));
+            var commandService = new CommandService(commandConfig);
 
-            services.AddSingleton<DiscordSocketClient>();
-            services.AddSingleton(new CommandService(commandConfig));
+            commandService.AddTypeReader<LookupType>(new LookupTypeReader());
+            commandService.AddTypeReader<Option>(new OptionsTypeReader());
 
+            services.AddSingleton(commandService);
             services.AddSingleton<CommandHandler>();
-            services.AddSingleton<RandomMessages>();
-            services.AddTransient<ShadowlandsCountdownProvider>();
-            services.AddHostedService<BotApp>();
 
             return services;
         }

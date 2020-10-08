@@ -2,7 +2,7 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core
+namespace Gruggbot
 {
     using System;
     using System.Threading;
@@ -10,7 +10,7 @@ namespace Gruggbot.Core
 
     using Discord;
     using Discord.WebSocket;
-    using Gruggbot.Core.Configuration;
+    using Gruggbot.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;

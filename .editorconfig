@@ -47,3 +47,12 @@ dotnet_diagnostic.SA1124.severity = silent
 
 # CA2000: Dispose objects before losing scope
 dotnet_diagnostic.CA2000.severity = silent
+
+# IDE0058: Expression value is never used
+csharp_style_unused_value_expression_statement_preference = discard_variable:silent
+
+# CA1305: Specify IFormatProvider
+dotnet_diagnostic.CA1305.severity = silent
+
+# SA1602: Enumeration items should be documented
+dotnet_diagnostic.SA1602.severity = silent

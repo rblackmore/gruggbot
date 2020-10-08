@@ -2,7 +2,7 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core.Configuration
+namespace Gruggbot.Configuration
 {
     /// <summary>
     /// Configuration options for <see cref="RandomMessages"/>.

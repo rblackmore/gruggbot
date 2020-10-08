@@ -1,19 +1,20 @@
-﻿namespace Gruggbot.Core.CommandModules
+﻿namespace Gruggbot.CommandModules
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
     using Discord.Commands;
-    using Gruggbot.Core.DiscordExtensions;
+    using Gruggbot.CommandModules.Model;
+    using Gruggbot.Extensions;
     using Microsoft.Extensions.Logging;
 
     [Summary("Helpful Information about the commands available")]
     public class HelpModule : ModuleBase
     {
+
         private ILogger<HelpModule> logger;
         private CommandService commandService;
         private IServiceProvider serviceProvider;
@@ -25,73 +26,48 @@
             this.serviceProvider = serviceProvider;
         }
 
+        /// <summary>
+        /// Displays a help message on Top Level modules and commands.
+        /// </summary>
+        /// <returns>An awaitable Task.</returns>
         [Command("help")]
         [Summary("Displays a very helpful message")]
         public async Task Help()
         {
             var modules = this.GetAvailableTopLevelModuleHelpInfo();
 
-            StringBuilder sb = new StringBuilder();
+            var helpMessage = this.BuildHelpMessageString(modules);
 
-            sb.AppendLine($"```Markdown\nAvailable Commands for {this.Context.Message.Author.Username}```");
-
-            int i = 0;
-
-            foreach (var mod in modules)
-            {
-                i++;
-                sb.Append($"**{i}. {mod.Name}** - ");
-
-                if (mod.Commands.Any())
-                    sb.AppendLine($"`{string.Join("`, `", mod.Commands)}`");
-
-                if (mod.SubModuleNames.Any())
-                    sb.AppendLine($"*SubModules*: **{string.Join("**, **", mod.SubModuleNames)}**");
-
-                if (mod.Commands.Any() && mod.SubModuleNames.Any())
-                    sb.AppendLine("***Module Not Implemented Yet***");
-            }
-
-            sb.AppendLine("```Markdown\nUser 'help <command>' or 'help <module>' for more information\n```");
-
-            await this.ReplyAsync(sb.ToString()).ConfigureAwait(false);
+            await this.ReplyAsync(helpMessage).ConfigureAwait(false);
         }
 
-        private IEnumerable<ModuleHelpInfoModel> GetAvailableTopLevelModuleHelpInfo()
-        {
-            return this.commandService.Modules
-                 .Where(mod => !mod.IsSubmodule)
-                 .Where(mod => !mod.IsHidden())
-                 .CheckConditions(this.Context, this.serviceProvider)
-                 .GetAwaiter().GetResult()
-                 .Select(mi => ModuleHelpInfoModel.CreateFromModuleInfo(mi, this.Context, this.serviceProvider));
-        }
-
+        /// <summary>
+        /// Displays a help message on a specified command or module.
+        /// </summary>
+        /// <param name="name">Name of command or module.</param>
+        /// <param name="lookupType">Search for Command or Module.</param>
+        /// <returns>An awaitable Task.</returns>
         [Command("help")]
         [Summary("Displays a very helpful message about a Command or Command Module")]
-        internal async Task Help([Summary("The Command or Command Module to get help for")] string name)
+        internal async Task Help(
+            [Summary("The Command or Command Module to get help for")] string name,
+            [Summary("Specify if searching for a command or a module")] LookupType lookupType = LookupType.None)
         {
-            bool isModuleLookup = name.Contains("module", StringComparison.InvariantCultureIgnoreCase);
-            string helpInformation;
-            if (isModuleLookup)
-                helpInformation = await HelpModuleLookup(name, Context, serviceProvider).ConfigureAwait(false);
-            else
-                helpInformation = await HelpCommandLookup(name, Context, serviceProvider).ConfigureAwait(false);
 
-            await ReplyAsync(helpInformation).ConfigureAwait(false);
+            await this.ReplyAsync(string.Format("LookupType is: `{0}`", lookupType)).ConfigureAwait(false);
+            return;
         }
 
         private async Task<string> HelpModuleLookup(string name, ICommandContext context, IServiceProvider map)
         {
-            //var module =
+            // var module =
             //    (from mody in await _commands.Modules.CheckConditions(context, map).ConfigureAwait(false)
             //     where mody.Name == name
             //     where !mody.Attributes.Any(att => att is HiddenAttribute)
             //     where !mody.Commands.Any(cmd => cmd.Attributes.Any(att => att is HiddenAttribute))
             //     select mody).FirstOrDefault();
 
-            //var mod = _commands.Modules.CheckConditions(context, map).Result.FirstOrDefault(mi => mi.Name == name);
-
+            // var mod = _commands.Modules.CheckConditions(context, map).Result.FirstOrDefault(mi => mi.Name == name);
 
             IEnumerable<ModuleInfo> modules = await commandService.Modules.CheckConditions(Context, serviceProvider).ConfigureAwait(false);
             ModuleInfo module = modules.FirstOrDefault(m => m.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
@@ -161,5 +137,43 @@
             return sb.ToString();
         }
 
+        private IEnumerable<ModuleHelpInfoModel> GetAvailableTopLevelModuleHelpInfo()
+        {
+            return this.commandService.Modules
+                 .Where(mod => !mod.IsSubmodule)
+                 .Where(mod => !mod.IsHidden())
+                 .CheckConditions(this.Context, this.serviceProvider)
+                 .GetAwaiter().GetResult()
+                 .Select(mi => ModuleHelpInfoModel.CreateFromModuleInfo(mi, this.Context, this.serviceProvider));
+        }
+
+        private string BuildHelpMessageString(IEnumerable<ModuleHelpInfoModel> moduleInfos)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine(string.Format("```Markdown\nAvailable Commands for {0}```", this.Context.Message.Author.Username));
+
+            int i = 0;
+
+            foreach (var mod in moduleInfos)
+            {
+                i++;
+
+                sb.Append(string.Format("**{0}. {1}** - ", i, mod.Name));
+
+                if (mod.Commands.Any())
+                    sb.AppendLine(string.Format("`{0}`", string.Join("`, `", mod.Commands)));
+
+                if (mod.SubModuleNames.Any())
+                    sb.AppendLine(string.Format("*SubModules*: **{0}**", string.Join("**, **", mod.SubModuleNames)));
+
+                if (mod.Commands.Any() && mod.SubModuleNames.Any())
+                    sb.AppendLine("***Module Not Implemented Yet***");
+            }
+
+            sb.AppendLine("```Markdown\nUse 'help <command>' or 'help <module>' for more information\n```");
+
+            return sb.ToString();
+        }
     }
 }

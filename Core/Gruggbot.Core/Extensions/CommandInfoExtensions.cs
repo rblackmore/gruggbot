@@ -2,7 +2,7 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core.DiscordExtensions
+namespace Gruggbot.Extensions
 {
     using System;
     using System.Collections.Generic;
@@ -10,7 +10,7 @@ namespace Gruggbot.Core.DiscordExtensions
     using System.Threading.Tasks;
 
     using Discord.Commands;
-    using Gruggbot.Core.CommandModules;
+    using Gruggbot.CommandModules;
 
     public static class CommandInfoExtensions
     {

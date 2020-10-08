@@ -2,7 +2,7 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core.CommandModules
+namespace Gruggbot.CommandModules
 {
     using System;
     using System.Text;

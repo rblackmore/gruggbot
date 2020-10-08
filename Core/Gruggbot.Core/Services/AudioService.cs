@@ -1,15 +1,17 @@
-﻿using Discord;
-using Discord.Audio;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿// <copyright file="AudioService.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
 
-namespace Gruggbot.Core.Service
+namespace Gruggbot.Services
 {
+    using System.Collections.Concurrent;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Threading.Tasks;
+
+    using Discord;
+    using Discord.Audio;
+
     public class AudioService
     {
         private readonly ConcurrentDictionary<ulong, IAudioClient> ConnectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();

@@ -1,4 +1,8 @@
-﻿namespace Gruggbot.Core.Configuration
+﻿// <copyright file="CommandHandlerConfiguration.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
+
+namespace Gruggbot.Configuration
 {
     using System;
     using System.Collections.Generic;

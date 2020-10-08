@@ -1,4 +1,8 @@
-﻿namespace Gruggbot.Core.Helpers
+﻿// <copyright file="SocketMessageExtensions.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
+
+namespace Gruggbot.Extensions
 {
     using Discord.Commands;
     using Discord.WebSocket;

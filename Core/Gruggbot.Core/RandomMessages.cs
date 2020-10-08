@@ -2,15 +2,15 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core
+namespace Gruggbot
 {
     using System;
     using System.Threading.Tasks;
 
     using Discord;
     using Discord.WebSocket;
-    using Gruggbot.Core.Configuration;
-    using Gruggbot.Core.Helpers;
+    using Gruggbot.Configuration;
+    using Gruggbot.Extensions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 

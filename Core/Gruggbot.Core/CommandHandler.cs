@@ -2,16 +2,18 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-namespace Gruggbot.Core
+namespace Gruggbot
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
+
     using Discord;
     using Discord.Commands;
     using Discord.WebSocket;
-    using Gruggbot.Core.Configuration;
-    using Gruggbot.Core.Helpers;
+    using Gruggbot.Configuration;
+    using Gruggbot.Extensions;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
 
@@ -44,7 +46,7 @@ namespace Gruggbot.Core
         {
             this.discordClient.MessageReceived += this.HandleCommandAsync;
             this.commandService.Log += this.CommandService_Log;
-            this.commandService.CommandExecuted += this.CommandService_CommandExecuted;
+            this.commandService.CommandExecuted += this.CommandExecuted;
 
             await this.commandService
                 .AddModulesAsync(Assembly.GetExecutingAssembly(), this.serviceProvider)
@@ -72,23 +74,58 @@ namespace Gruggbot.Core
                 .ConfigureAwait(false);
         }
 
-        private Task CommandService_CommandExecuted(Optional<CommandInfo> commandInfo, ICommandContext commandContext, IResult result)
+        private Task CommandExecuted(Optional<CommandInfo> commandInfo, ICommandContext commandContext, IResult result)
         {
-            if (!commandInfo.IsSpecified)
-                return Task.CompletedTask;
-
-            var template = "Command Executed - {module}:{commandName} by {user}:{channel}:{guild} - Message: {message}";
-
-            var commandName = commandInfo.Value.Name;
-            var module = commandInfo.Value.Module.Name;
-            var userName = commandContext.User.Username;
-            var channel = commandContext.Channel.Name;
-            var guild = commandContext.Guild.Name;
-            var message = commandContext.Message;
-
-            this.logger.LogInformation(template, module, commandName, userName, channel, guild, message);
+            if (result.IsSuccess)
+                this.LogSuccessfulCommand(commandInfo.Value, commandContext);
+            else
+                this.LogUnsuccessfulCommand(commandInfo.Value, commandContext, result);
 
             return Task.CompletedTask;
+        }
+
+        private void LogSuccessfulCommand(CommandInfo commandInfo, ICommandContext commandContext)
+        {
+            var template = "Command Executed: {module}->{commandName}";
+
+            var logContext = this.BuildLogContext(commandInfo, commandContext);
+
+            using (this.logger.BeginScope(logContext))
+            {
+                this.logger.LogInformation(template, logContext["module"], logContext["commandName"]);
+            }
+        }
+
+        private void LogUnsuccessfulCommand(CommandInfo commandInfo, ICommandContext commandContext, IResult result)
+        {
+            var template = "Error Processing Command: {module}->{commandName}";
+
+            var logContext = this.BuildLogContext(commandInfo, commandContext, result);
+
+            using (this.logger.BeginScope(logContext))
+            {
+                this.logger.LogError(template, logContext["module"], logContext["commandName"]);
+            }
+        }
+
+        private Dictionary<string, string> BuildLogContext(CommandInfo commandInfo, ICommandContext commandContext, IResult result = null)
+        {
+            var logContext = new Dictionary<string, string>();
+
+            logContext["module"] = commandInfo.Module.Name;
+            logContext["commandName"] = commandInfo.Name;
+            logContext["guild"] = commandContext.Guild.Name;
+            logContext["channel"] = commandContext.Channel.Name;
+            logContext["userName"] = commandContext.User.Username;
+            logContext["messageContent"] = commandContext.Message.Content;
+
+            if (result != null)
+            {
+                logContext["errorType"] = result.Error.Value.ToString();
+                logContext["errorReason"] = result.ErrorReason;
+            }
+
+            return logContext;
         }
 
         private Task CommandService_Log(LogMessage msg)

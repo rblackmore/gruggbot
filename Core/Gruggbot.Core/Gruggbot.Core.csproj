@@ -3,12 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <RootNamespace>Gruggbot</RootNamespace>
+    <AssemblyName>Gruggbot.Core</AssemblyName>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Logging\CommandEventLog.cs" />
-    <Compile Remove="Logging\ILoggerExtensions.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Content\Images\classic.png" />
@@ -56,10 +53,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="TimeZoneConverter" Version="3.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Logging\" />
   </ItemGroup>
 
 </Project>

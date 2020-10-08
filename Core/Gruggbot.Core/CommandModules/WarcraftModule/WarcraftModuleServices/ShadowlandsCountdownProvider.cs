@@ -1,4 +1,8 @@
-﻿namespace Gruggbot.Core.CommandModules
+﻿// <copyright file="ShadowlandsCountdownProvider.cs" company="Ryan Blackmore">.
+// Copyright © 2020 Ryan Blackmore. All rights Reserved.
+// </copyright>
+
+namespace Gruggbot.CommandModules
 {
     using System;
     using System.Text;

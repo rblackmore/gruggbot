@@ -2,18 +2,15 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
-#pragma warning disable SA1600 // Elements should be documented
-
 namespace GruggbotBootstrapper
 {
     using System;
-    using System.IO;
     using System.Threading.Tasks;
 
-    using Gruggbot.Core.DependencyInjection;
-    using Microsoft.Extensions.Configuration;
+    using Gruggbot.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Serilog;
+    using Serilog.Configuration;
 
     public static class Program
     {
