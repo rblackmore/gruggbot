@@ -7,6 +7,7 @@ namespace Gruggbot.Extensions
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     using Discord.Commands;
@@ -67,6 +68,25 @@ namespace Gruggbot.Extensions
         internal static bool IsHidden(this ModuleInfo module)
         {
             return module.Preconditions.Any(pc => pc is HiddenAttribute);
+        }
+
+        /// <summary>
+        /// Gets only Top Level Modules avaialbe to the user who called the command.
+        /// </summary>
+        /// <param name="modules">Module Info Collection to check.</param>
+        /// <param name="context">Command Context.</param>
+        /// <param name="services">Service Provider.</param>
+        /// <returns>Awaitable task with list of Available ModuleInfo objects.</returns>
+        internal static async Task<IEnumerable<ModuleInfo>> GetAvailableTopLevelModules(
+            this IEnumerable<ModuleInfo> modules,
+            ICommandContext context,
+            IServiceProvider services)
+        {
+            return await modules
+                 .Where(mod => !mod.IsSubmodule)
+                 .Where(mod => !mod.IsHidden())
+                 .CheckConditions(context, services)
+                 .ConfigureAwait(false);
         }
     }
 }

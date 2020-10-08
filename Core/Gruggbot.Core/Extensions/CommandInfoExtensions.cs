@@ -12,9 +12,12 @@ namespace Gruggbot.Extensions
     using Discord.Commands;
     using Gruggbot.CommandModules;
 
-    public static class CommandInfoExtensions
+    internal static class CommandInfoExtensions
     {
-        public static async Task<IEnumerable<CommandInfo>> CheckConditions(this IEnumerable<CommandInfo> commands, ICommandContext ctx, IServiceProvider map)
+        internal static async Task<IEnumerable<CommandInfo>> CheckConditions(
+            this IEnumerable<CommandInfo> commands,
+            ICommandContext ctx,
+            IServiceProvider map)
         {
             var availableCommands = new List<CommandInfo>();
 
@@ -33,13 +36,16 @@ namespace Gruggbot.Extensions
         /// Converts list of commands into a string list of distinct command names.
         /// </summary>
         /// <param name="commands">The command list to convert.</param>
-        /// <param name="ctx">Context in which the command was called.</param>
-        /// <param name="map">Service provider for command system.</param>
+        /// <param name="context">Context in which the command was called.</param>
+        /// <param name="services">Service provider for command system.</param>
         /// <returns>IEnumerable of command name strings.</returns>
-        public static async Task<IEnumerable<string>> GetCommandListStringAsync(this IEnumerable<CommandInfo> commands, ICommandContext ctx, IServiceProvider map)
+        internal static async Task<IEnumerable<string>> GetCommandListStringAsync(
+            this IEnumerable<CommandInfo> commands,
+            ICommandContext context,
+            IServiceProvider services)
         {
             var cmds =
-                from cmd in await commands.CheckConditions(ctx, map).ConfigureAwait(false)
+                from cmd in await commands.CheckConditions(context, services).ConfigureAwait(false)
                 select cmd.Name;
 
             return cmds.Distinct();
