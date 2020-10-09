@@ -57,5 +57,8 @@ dotnet_diagnostic.CA1305.severity = silent
 # SA1602: Enumeration items should be documented
 dotnet_diagnostic.SA1602.severity = silent
 
-# SA0001: XML comment analysis is disabled due to project configuration
-dotnet_diagnostic.SA0001.severity = silent
+# SA1601: Partial elements should be documented
+dotnet_diagnostic.SA1601.severity = silent
+
+# CA1812: HelpModule is an internal class that is apparently never instantiated. If so, remove the code from the assembly. If this class is intended to contain only static members, make it static (Shared in Visual Basic).
+dotnet_diagnostic.CA1812.severity = silent

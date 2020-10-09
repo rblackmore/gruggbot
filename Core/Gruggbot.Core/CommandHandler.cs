@@ -53,6 +53,27 @@ namespace Gruggbot
                 .ConfigureAwait(false);
         }
 
+        private static Dictionary<string, string> BuildLogContext(CommandInfo commandInfo, ICommandContext commandContext, IResult result = null)
+        {
+            var logContext = new Dictionary<string, string>
+            {
+                ["module"] = commandInfo.Module.Name,
+                ["commandName"] = commandInfo.Name,
+                ["guild"] = commandContext.Guild.Name,
+                ["channel"] = commandContext.Channel.Name,
+                ["userName"] = commandContext.User.Username,
+                ["messageContent"] = commandContext.Message.Content,
+            };
+
+            if (result != null)
+            {
+                logContext["errorType"] = result.Error.Value.ToString();
+                logContext["errorReason"] = result.ErrorReason;
+            }
+
+            return logContext;
+        }
+
         private async Task HandleCommandAsync(SocketMessage message)
         {
             if (message.Author.IsBot)
@@ -87,7 +108,7 @@ namespace Gruggbot
         {
             var template = "Command Executed: {module}->{commandName}";
 
-            var logContext = this.BuildLogContext(commandInfo, commandContext);
+            var logContext = BuildLogContext(commandInfo, commandContext);
 
             using (this.logger.BeginScope(logContext))
             {
@@ -105,27 +126,6 @@ namespace Gruggbot
             {
                 this.logger.LogError(template, logContext["module"], logContext["commandName"]);
             }
-        }
-
-        private static Dictionary<string, string> BuildLogContext(CommandInfo commandInfo, ICommandContext commandContext, IResult result = null)
-        {
-            var logContext = new Dictionary<string, string>
-            {
-                ["module"] = commandInfo.Module.Name,
-                ["commandName"] = commandInfo.Name,
-                ["guild"] = commandContext.Guild.Name,
-                ["channel"] = commandContext.Channel.Name,
-                ["userName"] = commandContext.User.Username,
-                ["messageContent"] = commandContext.Message.Content,
-            };
-
-            if (result != null)
-            {
-                logContext["errorType"] = result.Error.Value.ToString();
-                logContext["errorReason"] = result.ErrorReason;
-            }
-
-            return logContext;
         }
 
         private Task CommandService_Log(LogMessage msg)

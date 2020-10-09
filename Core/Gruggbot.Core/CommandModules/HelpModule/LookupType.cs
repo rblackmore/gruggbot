@@ -4,7 +4,7 @@
 
 namespace Gruggbot.CommandModules
 {
-    internal enum LookupType
+    public enum LookupType
     {
         None,
         Module,

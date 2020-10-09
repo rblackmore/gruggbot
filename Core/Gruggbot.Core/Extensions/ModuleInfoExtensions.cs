@@ -18,10 +18,10 @@ namespace Gruggbot.Extensions
         /// <summary>
         /// Checks Module for any executable commands by the calling User.
         /// </summary>
-        /// <param name="module">Module to check</param>
-        /// <param name="context">Context in which the command was called</param>
-        /// <param name="services">Service Provider for command system</param>
-        /// <returns>Boolean value indicating if the user can execute commands in this module</returns>
+        /// <param name="module">Module to check.</param>
+        /// <param name="context">Context in which the command was called.</param>
+        /// <param name="services">Service Provider for command system.</param>
+        /// <returns>Boolean value indicating if the user can execute commands in this module.</returns>
         internal static async Task<bool> CheckConditions(
             this ModuleInfo module,
             ICommandContext context,
@@ -41,7 +41,7 @@ namespace Gruggbot.Extensions
         /// <summary>
         /// Checks Module list for any executable commands by the calling user.
         /// </summary>
-        /// <param name="modules">Module list to check</param>
+        /// <param name="modules">Module list to check.</param>
         /// <param name="context">Context in which the command was called.</param>
         /// <param name="services">Service Provide for the command system.</param>
         /// <returns>Enumerable of all modules the user can execute commands within.</returns>

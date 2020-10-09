@@ -12,7 +12,14 @@
     "orderingRules": {
       "usingDirectivesPlacement": "insideNamespace",
       "blankLinesBetweenUsingGroups": "require",
-      "systemUsingDirectivesFirst": true
+      "systemUsingDirectivesFirst": true,
+      "elementOrder": [
+        "kind",
+        "accessibility",
+        "constant",
+        "readonly",
+        "static"
+      ]
     }
   }
 }
