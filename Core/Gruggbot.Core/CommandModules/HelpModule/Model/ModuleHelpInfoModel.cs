@@ -1,4 +1,4 @@
-﻿// <copyright file="ModuleHelpInfo.cs" company="Ryan Blackmore">.
+﻿// <copyright file="ModuleHelpInfoModel.cs" company="Ryan Blackmore">.
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 

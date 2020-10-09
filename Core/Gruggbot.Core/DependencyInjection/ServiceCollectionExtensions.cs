@@ -43,7 +43,7 @@ namespace Gruggbot.DependencyInjection
             var commandService = new CommandService(commandConfig);
 
             commandService.AddTypeReader<LookupType>(new LookupTypeReader());
-            commandService.AddTypeReader<Option>(new OptionsTypeReader());
+            commandService.AddTypeReader<TestOption>(new OptionsTypeReader());
 
             services.AddSingleton(commandService);
             services.AddSingleton<CommandHandler>();

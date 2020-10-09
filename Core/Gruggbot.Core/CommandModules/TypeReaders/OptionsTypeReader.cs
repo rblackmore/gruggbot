@@ -14,10 +14,10 @@ namespace Gruggbot.CommandModules.TypeReaders
         public override Task<TypeReaderResult> ReadAsync(ICommandContext context, string input, IServiceProvider services)
         {
             if (string.IsNullOrEmpty(input))
-                return Task.FromResult(TypeReaderResult.FromSuccess(Option.None));
+                return Task.FromResult(TypeReaderResult.FromSuccess(TestOption.None));
 
             // Try parse input as Options. Ignore case.
-            if (Enum.TryParse<Option>(input, true, out Option result))
+            if (Enum.TryParse<TestOption>(input, true, out TestOption result))
                 return Task.FromResult(TypeReaderResult.FromSuccess(result));
 
             var errorReason = string.Format("Failed to parse `{0}` as Options value", input);

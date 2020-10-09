@@ -19,11 +19,11 @@ namespace Gruggbot
 
     public class CommandHandler
     {
-        private ILogger<CommandHandler> logger;
-        private BotConfiguration options;
-        private IServiceProvider serviceProvider;
-        private CommandService commandService;
-        private DiscordSocketClient discordClient;
+        private readonly ILogger<CommandHandler> logger;
+        private readonly BotConfiguration options;
+        private readonly IServiceProvider serviceProvider;
+        private readonly CommandService commandService;
+        private readonly DiscordSocketClient discordClient;
 
         public CommandHandler(
             ILogger<CommandHandler> logger,
@@ -53,7 +53,6 @@ namespace Gruggbot
                 .ConfigureAwait(false);
         }
 
-
         private async Task HandleCommandAsync(SocketMessage message)
         {
             if (message.Author.IsBot)
@@ -70,7 +69,7 @@ namespace Gruggbot
 
             var context = new CommandContext(this.discordClient, userMessage);
 
-            var result = await this.commandService.ExecuteAsync(context, argPos, this.serviceProvider)
+            _ = await this.commandService.ExecuteAsync(context, argPos, this.serviceProvider)
                 .ConfigureAwait(false);
         }
 
@@ -100,7 +99,7 @@ namespace Gruggbot
         {
             var template = "Error Processing Command: {module}->{commandName}";
 
-            var logContext = this.BuildLogContext(commandInfo, commandContext, result);
+            var logContext = BuildLogContext(commandInfo, commandContext, result);
 
             using (this.logger.BeginScope(logContext))
             {
@@ -108,16 +107,17 @@ namespace Gruggbot
             }
         }
 
-        private Dictionary<string, string> BuildLogContext(CommandInfo commandInfo, ICommandContext commandContext, IResult result = null)
+        private static Dictionary<string, string> BuildLogContext(CommandInfo commandInfo, ICommandContext commandContext, IResult result = null)
         {
-            var logContext = new Dictionary<string, string>();
-
-            logContext["module"] = commandInfo.Module.Name;
-            logContext["commandName"] = commandInfo.Name;
-            logContext["guild"] = commandContext.Guild.Name;
-            logContext["channel"] = commandContext.Channel.Name;
-            logContext["userName"] = commandContext.User.Username;
-            logContext["messageContent"] = commandContext.Message.Content;
+            var logContext = new Dictionary<string, string>
+            {
+                ["module"] = commandInfo.Module.Name,
+                ["commandName"] = commandInfo.Name,
+                ["guild"] = commandContext.Guild.Name,
+                ["channel"] = commandContext.Channel.Name,
+                ["userName"] = commandContext.User.Username,
+                ["messageContent"] = commandContext.Message.Content,
+            };
 
             if (result != null)
             {

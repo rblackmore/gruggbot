@@ -7,6 +7,10 @@
     <AssemblyName>Gruggbot.Core</AssemblyName>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Content\Images\classic.png" />
     <None Remove="Content\Images\ClassicGlobalTimes.jpg" />

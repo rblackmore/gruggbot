@@ -23,7 +23,7 @@ namespace Gruggbot.Extensions
 
             foreach (var cmd in commands)
             {
-                if ((await cmd.CheckPreconditionsAsync(ctx,map).ConfigureAwait(false)).IsSuccess)
+                if ((await cmd.CheckPreconditionsAsync(ctx, map).ConfigureAwait(false)).IsSuccess)
                 {
                     availableCommands.Add(cmd);
                 }

@@ -9,7 +9,7 @@ namespace Gruggbot.CommandModules
     using Discord.Commands;
     using Microsoft.Extensions.Logging;
 
-    public enum Option
+    public enum TestOption
     {
         None,
         Dull,
@@ -47,7 +47,7 @@ namespace Gruggbot.CommandModules
         }
 
         [Command("reader")]
-        public async Task ReaderTest(Option selection = Option.None)
+        public async Task ReaderTest(TestOption selection = TestOption.None)
         {
             this.logger.LogTrace("Option selected is `{option}`", selection);
             await this.ReplyAsync(string.Format("Selected Option: `{0}`", selection)).ConfigureAwait(false);

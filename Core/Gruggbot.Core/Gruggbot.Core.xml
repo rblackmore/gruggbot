@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Gruggbot.Core</name>
+    </assembly>
+    <members>
+        <member name="M:Gruggbot.CommandModules.HelpModule.Help">
+            <summary>
+            Displays a help message on Top Level modules and commands.
+            </summary>
+            <returns>An awaitable Task.</returns>
+        </member>
+        <member name="M:Gruggbot.CommandModules.HelpModule.Help(System.String)">
+            <summary>
+            Displays a help message on a specified command or module.
+            </summary>
+            <param name="name">Name of command or module.</param>
+            <returns>An awaitable Task.</returns>
+        </member>
+        <member name="M:Gruggbot.CommandModules.HelpModule.Help(System.String,Gruggbot.CommandModules.LookupType)">
+            <summary>
+            Displays a help message on a specified command or module.
+            </summary>
+            <param name="name">Name of command or module.</param>
+            <param name="lookupType">Search for Command or Module.</param>
+            <returns>An awaitable Task.</returns>
+        </member>
+        <member name="T:Gruggbot.Configuration.RandomMessagesConfiguration">
+            <summary>
+            Configuration options for <see cref="F:Gruggbot.Configuration.RandomMessagesConfiguration.RandomMessages"/>.
+            </summary>
+        </member>
+        <member name="M:Gruggbot.Extensions.CommandInfoExtensions.GetCommandListStringAsync(System.Collections.Generic.IEnumerable{Discord.Commands.CommandInfo},Discord.Commands.ICommandContext,System.IServiceProvider)">
+            <summary>
+            Converts list of commands into a string list of distinct command names.
+            </summary>
+            <param name="commands">The command list to convert.</param>
+            <param name="context">Context in which the command was called.</param>
+            <param name="services">Service provider for command system.</param>
+            <returns>IEnumerable of command name strings.</returns>
+        </member>
+        <member name="M:Gruggbot.Extensions.ModuleInfoExtensions.CheckConditions(Discord.Commands.ModuleInfo,Discord.Commands.ICommandContext,System.IServiceProvider)">
+            <summary>
+            Checks Module for any executable commands by the calling User.
+            </summary>
+            <param name="module">Module to check</param>
+            <param name="context">Context in which the command was called</param>
+            <param name="services">Service Provider for command system</param>
+            <returns>Boolean value indicating if the user can execute commands in this module</returns>
+        </member>
+        <member name="M:Gruggbot.Extensions.ModuleInfoExtensions.CheckConditions(System.Collections.Generic.IEnumerable{Discord.Commands.ModuleInfo},Discord.Commands.ICommandContext,System.IServiceProvider)">
+            <summary>
+            Checks Module list for any executable commands by the calling user.
+            </summary>
+            <param name="modules">Module list to check</param>
+            <param name="context">Context in which the command was called.</param>
+            <param name="services">Service Provide for the command system.</param>
+            <returns>Enumerable of all modules the user can execute commands within.</returns>
+            <remarks>Recursively calls itself for each submodule list.</remarks>
+        </member>
+        <member name="M:Gruggbot.Extensions.ModuleInfoExtensions.GetAvailableTopLevelModules(System.Collections.Generic.IEnumerable{Discord.Commands.ModuleInfo},Discord.Commands.ICommandContext,System.IServiceProvider)">
+            <summary>
+            Gets only Top Level Modules avaialbe to the user who called the command.
+            </summary>
+            <param name="modules">Module Info Collection to check.</param>
+            <param name="context">Command Context.</param>
+            <param name="services">Service Provider.</param>
+            <returns>Awaitable task with list of Available ModuleInfo objects.</returns>
+        </member>
+        <member name="T:Gruggbot.RandomMessages">
+            <summary>
+            Class which provides random message responses to a discord server.
+            </summary>
+        </member>
+        <member name="M:Gruggbot.RandomMessages.Setup">
+            <summary>
+            Registers several response delegates with The MessageReceived Event.
+            </summary>
+        </member>
+        <member name="M:Gruggbot.RandomMessages.RandomResponses(Discord.WebSocket.SocketMessage)">
+            <summary>
+            Responds to a User Message with one of several responses.
+            Depending on message content, and current response chance.
+            Only responds to User Messages.
+            </summary>
+            <param name="message">Received Message to respond to.</param>
+        </member>
+        <member name="M:Gruggbot.RandomMessages.GuaranteedResponses(Discord.WebSocket.SocketMessage)">
+            <summary>
+            Responds to a User Message with one of several responses.
+            Depending on message content.
+            Only Responds to User Messages.
+            </summary>
+            <param name="message">Received Message to respond to.</param>
+        </member>
+    </members>
+</doc>

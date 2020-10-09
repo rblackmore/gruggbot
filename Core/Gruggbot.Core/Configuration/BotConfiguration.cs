@@ -11,6 +11,5 @@ namespace Gruggbot.Configuration
         public string Token { get; set; }
 
         public CommandHandlerConfiguration Commands { get; set; }
-
     }
 }

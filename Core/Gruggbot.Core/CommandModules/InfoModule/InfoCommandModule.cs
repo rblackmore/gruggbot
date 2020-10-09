@@ -30,12 +30,12 @@ namespace Gruggbot.CommandModules
             var author = this.Context.Message.Author;
             StringBuilder sb = new StringBuilder();
 
-            OperatingSystem OS = Environment.OSVersion;
+            OperatingSystem os = Environment.OSVersion;
 
             sb.AppendLine("System Information");
             sb.AppendLine($"Machine Name: {Environment.MachineName}");
-            sb.AppendLine($"OS Platform: {OS.Platform}");
-            sb.AppendLine($"OS Version: {OS.VersionString}");
+            sb.AppendLine($"OS Platform: {os.Platform}");
+            sb.AppendLine($"OS Version: {os.VersionString}");
 
             await author.SendMessageAsync(sb.ToString()).ConfigureAwait(false);
         }

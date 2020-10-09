@@ -15,15 +15,16 @@
     [Summary("Helpful Information about the commands available")]
     public class HelpModule : ModuleBase
     {
+#pragma warning disable IDE0052 // Remove unread private members
+        private readonly ILogger<HelpModule> logger;
+#pragma warning restore IDE0052 // Remove unread private members
+        private readonly CommandService commandService;
+        private readonly IServiceProvider serviceProvider;
 
-        private ILogger<HelpModule> logger;
-        private CommandService commandService;
-        private IServiceProvider serviceProvider;
-
-        public HelpModule(ILogger<HelpModule> logger, CommandService commands, IServiceProvider serviceProvider)
+        public HelpModule(ILogger<HelpModule> logger, CommandService commandService, IServiceProvider serviceProvider)
         {
             this.logger = logger;
-            this.commandService = commands;
+            this.commandService = commandService;
             this.serviceProvider = serviceProvider;
         }
 
@@ -114,7 +115,7 @@
                 .GetCommandListStringAsync(this.Context, this.serviceProvider)
                 .ConfigureAwait(false);
 
-            var helpMessage = this.BuildModuleHelpMessageString(module);
+            var helpMessage = BuildModuleHelpMessageString(module);
 
             await this.ReplyAsync(helpMessage).ConfigureAwait(false);
 
@@ -134,7 +135,7 @@
             if (command.IsHidden())
                 return false;
 
-            var helpMessage = this.BuildCommandHelpMessageString(command);
+            var helpMessage = BuildCommandHelpMessageString(command);
 
             await this.ReplyAsync(helpMessage).ConfigureAwait(false);
 
@@ -170,7 +171,7 @@
             return sb.ToString();
         }
 
-        private string BuildModuleHelpMessageString(ModuleInfo module)
+        private static string BuildModuleHelpMessageString(ModuleInfo module)
         {
             var name = module.Name;
             var summary = module.Summary;
@@ -192,7 +193,7 @@
             return sb.ToString();
         }
 
-        private string BuildCommandHelpMessageString(CommandInfo command)
+        private static string BuildCommandHelpMessageString(CommandInfo command)
         {
             var name = command.Name;
             var summary = command.Summary;
