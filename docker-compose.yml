@@ -1,17 +1,6 @@
 version: '3.4'
 
 services:
-  gruggbotbootstrapper:
-    image: ${DOCKER_REGISTRY-}gruggbotbootstrapper
-    container_name: gruggbot
-    build:
-      context: .
-      dockerfile: Execute/GruggbotBootstrapper/Dockerfile
-    environment:
-      DOTNET_ENVIRONMENT: "Development"
-    volumes:
-      - ./Settings/appsettings.json:/app/appsettings.json:ro
-
   seq:
     image: datalust/seq:latest
     container_name: gruggbot_seq
@@ -20,3 +9,14 @@ services:
       - 80:80
     environment:
       ACCEPT_EULA: Y
+    volumes:
+      - ${APPDATA}/datalust/data:/data
+
+  gruggbotbootstrapper:
+    image: ${DOCKER_REGISTRY-}gruggbotbootstrapper
+    container_name: gruggbot
+    build:
+      context: .
+      dockerfile: Execute/GruggbotBootstrapper/Dockerfile
+    environment:
+      DOTNET_ENVIRONMENT: "Development"
