@@ -9,7 +9,7 @@ namespace Gruggbot.Configuration
     /// </summary>
     public class RandomMessagesConfiguration
     {
-        public const string RandomMessages = "RandomMessages";
+        public const string RandomMessages = "Bot:RandomMessages";
 
         public int DefaultChance { get; set; }
 

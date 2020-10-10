@@ -27,6 +27,7 @@ namespace Gruggbot.DependencyInjection
             services.Configure<BotConfiguration>(configuration.GetSection(BotConfiguration.Bot));
             services.AddHostedService<BotApp>();
 
+            services.Configure<RandomMessagesConfiguration>(configuration.GetSection(RandomMessagesConfiguration.RandomMessages));
             services.AddSingleton<RandomMessages>();
 
             services.AddTransient<ShadowlandsCountdownProvider>();

@@ -64,7 +64,7 @@ namespace Gruggbot
             if (message.Author.IsBot)
                 return;
 
-            if (message.TryCastSocketUserMessage(out SocketUserMessage userMessage))
+            if (!message.TryCastSocketUserMessage(out SocketUserMessage userMessage))
                 return;
 
             if (!this.ShouldReact())
