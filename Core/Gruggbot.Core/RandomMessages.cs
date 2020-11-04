@@ -94,7 +94,11 @@ namespace Gruggbot
 
         private async Task WelcomeBack(SocketUserMessage userMessage)
         {
-            if (!userMessage.Content.Contains("welcome back", StringComparison.InvariantCultureIgnoreCase))
+            var containsWelcomeBack =
+                userMessage.Content
+                .Contains("welcome back", StringComparison.InvariantCultureIgnoreCase);
+
+            if (!containsWelcomeBack)
                 return;
 
             if (userMessage.IsUserMentioned(this.discordClient.CurrentUser))
@@ -102,23 +106,35 @@ namespace Gruggbot
                 var channel = userMessage.Channel;
                 var author = userMessage.Author;
 
-                await channel.SendMessageAsync($"Thank you {author.Mention}").ConfigureAwait(false);
+                await channel.SendMessageAsync($"Thank you {author.Mention}")
+                    .ConfigureAwait(false);
             }
         }
 
         private async Task ShenanigansResponse(SocketUserMessage userMessage)
         {
-            if (userMessage.Content.Contains("shenanigans", StringComparison.InvariantCultureIgnoreCase))
-            {
-                await userMessage.Channel.SendMessageAsync($"Pistol whips {userMessage.Author.Mention}")
-                    .ConfigureAwait(false);
-            }
+            var containsShenanigans =
+                userMessage.Content
+                .Contains("shenanigans", StringComparison.InvariantCultureIgnoreCase);
+
+            if (!containsShenanigans)
+                return;
+
+            await userMessage.Channel.SendMessageAsync($"Pistol whips {userMessage.Author.Mention}")
+                .ConfigureAwait(false);
         }
 
         private async Task BananaReaction(SocketUserMessage userMessage)
         {
-            if (userMessage.Content.Contains("banana", StringComparison.InvariantCultureIgnoreCase))
-                await userMessage.AddReactionAsync(new Emoji("🍌")).ConfigureAwait(false);
+            var containsBanana =
+                userMessage.Content
+                .Contains("banana", StringComparison.InvariantCultureIgnoreCase);
+
+            if (!containsBanana)
+                return;
+
+            await userMessage.AddReactionAsync(new Emoji("🍌"))
+                .ConfigureAwait(false);
         }
 
         #region Helper Methods

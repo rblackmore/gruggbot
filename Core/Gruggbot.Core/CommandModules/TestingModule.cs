@@ -4,9 +4,11 @@
 
 namespace Gruggbot.CommandModules
 {
+    using System;
     using System.Threading.Tasks;
 
     using Discord.Commands;
+    using Discord.Commands.Builders;
     using Microsoft.Extensions.Logging;
 
     public enum TestOption
@@ -26,6 +28,25 @@ namespace Gruggbot.CommandModules
         public TestingModule(ILogger<TestingModule> logger)
         {
             this.logger = logger;
+        }
+
+        protected override void OnModuleBuilding(CommandService commandService, ModuleBuilder builder)
+        {
+            if (builder == null)
+                throw new ArgumentNullException(nameof(builder));
+
+            builder.AddCommand("countdown", this.CountDownCallback, this.CreateCountdown);
+        }
+
+        private void CreateCountdown(CommandBuilder builder)
+        {
+            builder.Summary = "A Simple Countdown Test Timer";
+            builder.AddPrecondition(new HiddenAttribute());
+        }
+
+        private async Task CountDownCallback(ICommandContext commandContext, object[] args, IServiceProvider services, CommandInfo command)
+        {
+            await commandContext.Channel.SendMessageAsync("Successfully Called `countdown`").ConfigureAwait(false);
         }
 
         [Command("log")]

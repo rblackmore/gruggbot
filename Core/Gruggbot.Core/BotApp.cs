@@ -74,15 +74,17 @@ namespace Gruggbot
 
         private Task Client_Connected()
         {
+            var botname = this.discordClient.CurrentUser.Username;
+
             this.logger
-                .LogInformation("Connected as: {botname}", this.discordClient.CurrentUser.Username);
+                .LogInformation("Connected as: {botname}", botname);
 
             return Task.CompletedTask;
         }
 
         private Task DiscordLogEvent(LogMessage msg)
         {
-            var message = msg.Message;
+            var message = msg.Message ?? msg.Exception?.Message;
             var source = msg.Source;
 
             var template = "DiscordClient - {source}: {message}";

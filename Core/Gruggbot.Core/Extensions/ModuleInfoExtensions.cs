@@ -29,8 +29,11 @@ namespace Gruggbot.Extensions
         {
             bool canExecute = false;
 
-            var cmds = await module.Commands.CheckConditions(context, services).ConfigureAwait(false);
-            var subs = await module.Submodules.CheckConditions(context, services).ConfigureAwait(false);
+            var cmds = await module.Commands.CheckConditions(context, services)
+                .ConfigureAwait(false);
+
+            var subs = await module.Submodules.CheckConditions(context, services)
+                .ConfigureAwait(false);
 
             if (cmds.Any() || subs.Any())
                 canExecute = true;

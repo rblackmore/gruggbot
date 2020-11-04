@@ -11,6 +11,7 @@ namespace Gruggbot
 
     using Discord;
     using Discord.Commands;
+    using Discord.Commands.Builders;
     using Discord.WebSocket;
     using Gruggbot.Configuration;
     using Gruggbot.Extensions;
@@ -53,7 +54,10 @@ namespace Gruggbot
                 .ConfigureAwait(false);
         }
 
-        private static Dictionary<string, string> BuildLogContext(CommandInfo commandInfo, ICommandContext commandContext, IResult result = null)
+        private static Dictionary<string, string> BuildLogContext(
+            CommandInfo commandInfo,
+            ICommandContext commandContext,
+            IResult result = null)
         {
             var logContext = new Dictionary<string, string>
             {
