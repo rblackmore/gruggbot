@@ -96,6 +96,5 @@ namespace Gruggbot.CommandModules
 
             return sb.ToString();
         }
-
     }
 }
