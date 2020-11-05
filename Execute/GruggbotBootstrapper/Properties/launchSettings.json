@@ -3,7 +3,8 @@
     "GruggbotBootstrapper": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Development"
+        "DOTNET_ENVIRONMENT": "Development",
+        "APP_MODE": "Test"
       }
     },
     "Docker": {

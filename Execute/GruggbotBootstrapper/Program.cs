@@ -8,8 +8,12 @@ namespace GruggbotBootstrapper
     using System.IO;
     using System.Threading.Tasks;
 
+    using Gruggbot.Data;
     using Gruggbot.DependencyInjection;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Configuration.EnvironmentVariables;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Serilog;
 
@@ -33,8 +37,17 @@ namespace GruggbotBootstrapper
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
-                    // services.AddHostedService<App>();
-                    services.AddBot(context.Configuration);
+                    if (EnvironmentVariables.IsTestMode)
+                    {
+                        services.AddHostedService<App>();
+                    }
+                    else
+                    {
+                        services.AddBot(context.Configuration);
+                    }
+
+                    services.AddDbContextFactory<GruggbotContext>(opt =>
+                        opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = Gruggbot"));
                 })
                 .UseSerilog((context, loggerConfiguration) =>
                 {
@@ -46,7 +59,7 @@ namespace GruggbotBootstrapper
             var builder = new ConfigurationBuilder();
 
             var env_settings =
-                $"appsettings.{Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ?? Environments.Production}.json";
+                $"appsettings.{EnvironmentVariables.Env}.json";
 
             builder.SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)

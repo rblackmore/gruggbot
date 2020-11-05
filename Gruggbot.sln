@@ -19,6 +19,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{BAEFC944-9905-4C48-8020-AE35CF64EF1B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{8A6AFD66-7869-42C5-8629-C00F744CDFF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gruggbot.DomainModel", "Data\Gruggbot.DomainModel\Gruggbot.DomainModel.csproj", "{D8996467-7EB5-4C12-8F19-3345F307D0F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gruggbot.Data", "Data\Gruggbot.Data\Gruggbot.Data.csproj", "{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +43,14 @@ Global
 		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Debug|Any CPU.Build.0 = Release|Any CPU
 		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8996467-7EB5-4C12-8F19-3345F307D0F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8996467-7EB5-4C12-8F19-3345F307D0F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8996467-7EB5-4C12-8F19-3345F307D0F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8996467-7EB5-4C12-8F19-3345F307D0F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +58,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2C1E617E-88B6-431D-8E7F-27F0EB0F7895} = {0CE6E242-E5E3-4E21-8DD7-7EFD362CA793}
 		{E4386F0E-63CE-4D9B-BC95-A8BACA15FF9B} = {7815C074-34C8-441A-B5F9-3C2718569F8E}
+		{D8996467-7EB5-4C12-8F19-3345F307D0F8} = {8A6AFD66-7869-42C5-8629-C00F744CDFF7}
+		{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4} = {8A6AFD66-7869-42C5-8629-C00F744CDFF7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {06ACA313-00D1-4FF9-9FDB-E2020F275C73}
