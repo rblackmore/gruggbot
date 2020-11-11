@@ -12,7 +12,6 @@ namespace GruggbotBootstrapper
     using Gruggbot.DependencyInjection;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Configuration.EnvironmentVariables;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Serilog;
@@ -46,8 +45,10 @@ namespace GruggbotBootstrapper
                         services.AddBot(context.Configuration);
                     }
 
+                    var connString = context.Configuration.GetConnectionString("GruggbotDB");
+
                     services.AddDbContextFactory<GruggbotContext>(opt =>
-                        opt.UseSqlServer("Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = Gruggbot"));
+                        opt.UseSqlite(connString));
                 })
                 .UseSerilog((context, loggerConfiguration) =>
                 {

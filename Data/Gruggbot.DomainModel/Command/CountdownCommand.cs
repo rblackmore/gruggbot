@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruggbot.DomainModel
+﻿namespace Gruggbot.DomainModel
 {
+    using System;
+
     public class CountdownCommand : Command
     {
         public DateTime EndDate { get; set; }
+
         public string Event { get; set; }
 
         public string ConstructCountdownMessage()

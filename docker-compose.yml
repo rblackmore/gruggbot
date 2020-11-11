@@ -20,3 +20,6 @@ services:
       dockerfile: Execute/GruggbotBootstrapper/Dockerfile
     environment:
       DOTNET_ENVIRONMENT: "Development"
+      APP_MODE: "Bot"
+    volumes:
+     - ${APPDATA}/gruggbot/data:/data

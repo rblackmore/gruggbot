@@ -6,9 +6,11 @@ namespace GruggbotBootstrapper
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
+
     using Gruggbot.Data;
     using Gruggbot.DomainModel;
     using Microsoft.EntityFrameworkCore;
@@ -41,11 +43,15 @@ namespace GruggbotBootstrapper
         {
             this.LogMessage("Begin App Testing");
 
+            Directory.CreateDirectory("Data");
+
+            this.context.Database.EnsureCreated();
+
             var command = new CountdownCommand
             {
                 Name = "ShadowLands",
                 Summary = "Displays Countdown to Shadowlands",
-                EndDate = new DateTime(2020,11,27, 10, 00, 00),
+                EndDate = new DateTime(2020, 11, 27, 10, 00, 00),
                 Event = "World of Warcraft: Shadowlands",
             };
 

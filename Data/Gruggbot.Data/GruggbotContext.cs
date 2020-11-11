@@ -1,26 +1,26 @@
-﻿using Gruggbot.DomainModel;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-
-namespace Gruggbot.Data
+﻿namespace Gruggbot.Data
 {
-    public class GruggbotContext : DbContext
+    using System.Reflection;
+
+    using Gruggbot.Application.Interfaces;
+    using Gruggbot.DomainModel;
+    using Microsoft.EntityFrameworkCore;
+
+    public class GruggbotContext : DbContext, IGruggbotContext
     {
+        public GruggbotContext(DbContextOptions<GruggbotContext> options)
+            : base(options)
+        {
+        }
 
         public DbSet<Command> Commands { get; set; }
 
-        public GruggbotContext(DbContextOptions options)
-            :base(options)
-        {
-        }
+        public DbSet<CountdownCommand> CountdownCommands { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (optionsBuilder.IsConfigured)
                 return;
-
-            var connString = "Data Source = (localdb)\\MSSQLLocalDB; Initial Catalog = Gruggbot";
-            optionsBuilder.UseSqlServer(connString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -11,7 +11,6 @@ namespace Gruggbot
 
     using Discord;
     using Discord.Commands;
-    using Discord.Commands.Builders;
     using Discord.WebSocket;
     using Gruggbot.Configuration;
     using Gruggbot.Extensions;
@@ -43,17 +42,6 @@ namespace Gruggbot
             this.discordClient = discordClient;
         }
 
-        public async Task InitializeAsync()
-        {
-            this.discordClient.MessageReceived += this.HandleCommandAsync;
-            this.commandService.Log += this.CommandService_Log;
-            this.commandService.CommandExecuted += this.CommandExecuted;
-
-            await this.commandService
-                .AddModulesAsync(Assembly.GetExecutingAssembly(), this.serviceProvider)
-                .ConfigureAwait(false);
-        }
-
         private static Dictionary<string, string> BuildLogContext(
             CommandInfo commandInfo,
             ICommandContext commandContext,
@@ -76,6 +64,17 @@ namespace Gruggbot
             }
 
             return logContext;
+        }
+
+        public async Task InitializeAsync()
+        {
+            this.discordClient.MessageReceived += this.HandleCommandAsync;
+            this.commandService.Log += this.CommandService_Log;
+            this.commandService.CommandExecuted += this.CommandExecuted;
+
+            await this.commandService
+                .AddModulesAsync(Assembly.GetExecutingAssembly(), this.serviceProvider)
+                .ConfigureAwait(false);
         }
 
         private async Task HandleCommandAsync(SocketMessage message)

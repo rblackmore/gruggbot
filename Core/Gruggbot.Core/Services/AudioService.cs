@@ -17,6 +17,18 @@ namespace Gruggbot.Services
         private readonly ConcurrentDictionary<ulong, IAudioClient> connectedChannels =
             new ConcurrentDictionary<ulong, IAudioClient>();
 
+        private static Process CreateProcess(string path)
+        {
+            var ffmpeg = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = $"-i {path} -ac 2 -f s16le -ar 48000 pipe:1",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+            };
+            return Process.Start(ffmpeg);
+        }
+
         internal async Task JoinAudio(IGuild guild, IVoiceChannel channel)
         {
             // Return if already in audio channel on this guild.
@@ -74,18 +86,6 @@ namespace Gruggbot.Services
                     }
                 }
             }
-        }
-
-        private static Process CreateProcess(string path)
-        {
-            var ffmpeg = new ProcessStartInfo
-            {
-                FileName = "ffmpeg",
-                Arguments = $"-i {path} -ac 2 -f s16le -ar 48000 pipe:1",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-            };
-            return Process.Start(ffmpeg);
         }
     }
 }

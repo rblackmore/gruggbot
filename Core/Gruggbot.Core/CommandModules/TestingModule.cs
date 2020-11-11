@@ -38,20 +38,11 @@ namespace Gruggbot.CommandModules
             builder.AddCommand("countdown", this.CountDownCallback, this.CreateCountdown);
         }
 
-        private void CreateCountdown(CommandBuilder builder)
-        {
-            builder.Summary = "A Simple Countdown Test Timer";
-            builder.AddPrecondition(new HiddenAttribute());
-        }
-
-        private async Task CountDownCallback(ICommandContext commandContext, object[] args, IServiceProvider services, CommandInfo command)
-        {
-            await commandContext.Channel.SendMessageAsync("Successfully Called `countdown`").ConfigureAwait(false);
-        }
-
         [Command("log")]
         [Summary("Logs an information message with the current logging framework.")]
+#pragma warning disable SA1202 // Elements should be ordered by access
         public async Task LogMessage(string message)
+#pragma warning restore SA1202 // Elements should be ordered by access
         {
             this.logger.LogInformation("Message logged: {message}", message);
             await this.ReplyAsync($"Message '{message}' has been logged").ConfigureAwait(false);
@@ -72,6 +63,17 @@ namespace Gruggbot.CommandModules
         {
             this.logger.LogTrace("Option selected is `{option}`", selection);
             await this.ReplyAsync(string.Format("Selected Option: `{0}`", selection)).ConfigureAwait(false);
+        }
+
+        private void CreateCountdown(CommandBuilder builder)
+        {
+            builder.Summary = "A Simple Countdown Test Timer";
+            builder.AddPrecondition(new HiddenAttribute());
+        }
+
+        private async Task CountDownCallback(ICommandContext commandContext, object[] args, IServiceProvider services, CommandInfo command)
+        {
+            await commandContext.Channel.SendMessageAsync("Successfully Called `countdown`").ConfigureAwait(false);
         }
     }
 }

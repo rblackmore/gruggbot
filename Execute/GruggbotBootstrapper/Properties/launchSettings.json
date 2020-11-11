@@ -4,7 +4,8 @@
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development",
-        "APP_MODE": "Test"
+        "APP_MODE": "Test",
+        "ConnectionStrings:GruggbotDB": "Data Source=.\\data\\GruggbotDB.db"
       }
     },
     "Docker": {

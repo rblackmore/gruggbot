@@ -64,4 +64,10 @@ dotnet_diagnostic.SA1601.severity = silent
 dotnet_diagnostic.CA1812.severity = silent
 
 guidelines = 80, 100
-guidelines_style = 1px dashed 60ff0000
+guidelines_style = 1px dashed AAff0000
+
+# SA1200: Using directives should be placed correctly
+dotnet_diagnostic.SA1200.severity = warning
+
+# SA0001: XML comment analysis is disabled due to project configuration
+dotnet_diagnostic.SA0001.severity = none

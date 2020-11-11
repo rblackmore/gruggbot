@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Gruggbot.Data": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ConnectionStrings:GruggbotDB": "Data Source=.\\data\\GruggbotDB.db"
+      }
+    }
+  }
+}

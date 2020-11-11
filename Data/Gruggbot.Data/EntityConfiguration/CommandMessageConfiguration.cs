@@ -1,14 +1,9 @@
-﻿using Gruggbot.DomainModel;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gruggbot.Data.EntityConfiguration
+﻿namespace Gruggbot.Data.EntityConfiguration
 {
+    using Gruggbot.DomainModel;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
     public class CommandMessageConfiguration : IEntityTypeConfiguration<CommandMessage>
     {
         public void Configure(EntityTypeBuilder<CommandMessage> builder)
