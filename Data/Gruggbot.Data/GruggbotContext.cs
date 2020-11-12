@@ -2,11 +2,10 @@
 {
     using System.Reflection;
 
-    using Gruggbot.Application.Interfaces;
     using Gruggbot.DomainModel;
     using Microsoft.EntityFrameworkCore;
 
-    public class GruggbotContext : DbContext, IGruggbotContext
+    public class GruggbotContext : DbContext
     {
         public GruggbotContext(DbContextOptions<GruggbotContext> options)
             : base(options)

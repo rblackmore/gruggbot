@@ -1,4 +1,4 @@
-﻿namespace Gruggbot.Application.CountdownCommands.Queries
+﻿namespace Gruggbot.Application.CountdownCommands.DbQueries
 {
     using System;
     using Gruggbot.DomainModel;

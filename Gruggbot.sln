@@ -25,13 +25,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gruggbot.DomainModel", "Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gruggbot.Data", "Data\Gruggbot.Data\Gruggbot.Data.csproj", "{9C344F63-9CE3-456F-9FE8-B4287C1E1BC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gruggbot.Application", "Application\Gruggbot.Application\Gruggbot.Application.csproj", "{ADDABE10-C97E-49D4-9364-97DE26A0590B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gruggbot.Application", "Application\Gruggbot.Application\Gruggbot.Application.csproj", "{ADDABE10-C97E-49D4-9364-97DE26A0590B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{9C009505-CB32-4D7C-9922-AAC324FD58C5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F6FFC61B-3580-42C9-94D9-05FD776B3202}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gruggbot.Application.Tests", "Application\Tests\Gruggbot.Application.Tests\Gruggbot.Application.Tests.csproj", "{0C966C5A-1303-4247-8018-47001B401CE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gruggbot.Application.Tests", "Application\Tests\Gruggbot.Application.Tests\Gruggbot.Application.Tests.csproj", "{0C966C5A-1303-4247-8018-47001B401CE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,8 +47,7 @@ Global
 		{E4386F0E-63CE-4D9B-BC95-A8BACA15FF9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4386F0E-63CE-4D9B-BC95-A8BACA15FF9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4386F0E-63CE-4D9B-BC95-A8BACA15FF9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Debug|Any CPU.Build.0 = Release|Any CPU
+		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAEFC944-9905-4C48-8020-AE35CF64EF1B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8996467-7EB5-4C12-8F19-3345F307D0F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

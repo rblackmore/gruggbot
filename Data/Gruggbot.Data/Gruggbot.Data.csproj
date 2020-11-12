@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\Gruggbot.Application\Gruggbot.Application.csproj" />
     <ProjectReference Include="..\Gruggbot.DomainModel\Gruggbot.DomainModel.csproj" />
   </ItemGroup>
 

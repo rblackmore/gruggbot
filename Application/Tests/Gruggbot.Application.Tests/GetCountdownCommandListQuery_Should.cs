@@ -1,48 +1,41 @@
-using AutoFixture;
-using Gruggbot.Application.CountdownCommands.Queries;
-using Gruggbot.Application.Interfaces;
-using Gruggbot.DomainModel;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-
 namespace Gruggbot.Application.Tests
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using AutoFixture;
+    using Gruggbot.Application.CountdownCommands.DbQueries;
+    using Gruggbot.Application.Interfaces;
+    using Gruggbot.Data;
+    using Gruggbot.DomainModel;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Moq;
+
     [TestClass]
     public class GetCountdownCommandListQuery_Should
     {
-
         private GetCountdownCommandsQuery getCountdownCommandListQuery;
+
+        private GruggbotContext gruggbotContext;
 
         [TestInitialize]
         public void Setup()
         {
             Fixture specimens = new Fixture();
-            
-            var countdownCommands = 
-                specimens.CreateMany<CountdownCommand>(5).AsQueryable();
 
-            var commandMock = new Mock<DbSet<CountdownCommand>>();
+            var countdownCommands =
+                specimens.CreateMany<CountdownCommand>(5).AsEnumerable();
 
-            commandMock.As<IQueryable<CountdownCommand>>()
-                .Setup(m => m.Provider).Returns(countdownCommands.Provider);
+            var optionsBuilder = new DbContextOptionsBuilder<GruggbotContext>()
+                .UseInMemoryDatabase("GruggbotInMemory");
 
-            commandMock.As<IQueryable<CountdownCommand>>()
-                .Setup(m => m.Expression).Returns(countdownCommands.Expression);
+            this.gruggbotContext = new GruggbotContext(optionsBuilder.Options);
 
-            commandMock.As<IQueryable<CountdownCommand>>()
-                .Setup(m => m.ElementType).Returns(countdownCommands.ElementType);
+            this.gruggbotContext.CountdownCommands.AddRange(countdownCommands);
 
-            commandMock.As<IQueryable<CountdownCommand>>()
-                .Setup(m => m.GetEnumerator()).Returns(countdownCommands.GetEnumerator());
-
-            var mockContext = new Mock<IGruggbotContext>();
-            mockContext.Setup(c => c.CountdownCommands).Returns(commandMock.Object);
-
-            this.getCountdownCommandListQuery = new GetCountdownCommandsQuery(mockContext.Object);
+            this.getCountdownCommandListQuery =
+                new GetCountdownCommandsQuery(this.gruggbotContext);
         }
 
         [TestMethod]

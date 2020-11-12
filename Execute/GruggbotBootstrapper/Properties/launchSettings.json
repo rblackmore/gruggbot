@@ -4,7 +4,7 @@
       "commandName": "Project",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development",
-        "APP_MODE": "Test",
+        "APP_MODE": "Bot",
         "ConnectionStrings:GruggbotDB": "Data Source=.\\data\\GruggbotDB.db"
       }
     },

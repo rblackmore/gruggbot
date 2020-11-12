@@ -1,16 +1,17 @@
-﻿namespace Gruggbot.Application.CountdownCommands.Queries
+﻿namespace Gruggbot.Application.CountdownCommands.DbQueries
 {
     using System.Collections.Generic;
     using System.Linq;
 
     using Gruggbot.Application.Interfaces;
+    using Gruggbot.Data;
     using Gruggbot.DomainModel;
 
     public class GetCountdownCommandsQuery : IGetCountdownCommandsQuery
     {
-        private IGruggbotContext context;
+        private GruggbotContext context;
 
-        public GetCountdownCommandsQuery(IGruggbotContext context)
+        public GetCountdownCommandsQuery(GruggbotContext context)
         {
             this.context = context;
         }
