@@ -8,7 +8,6 @@ namespace Gruggbot
     using System.Collections.Generic;
     using System.Reflection;
     using System.Threading.Tasks;
-
     using Discord;
     using Discord.Commands;
     using Discord.Commands.Builders;
@@ -91,14 +90,15 @@ namespace Gruggbot
 
             if (!userMessage.HasPrefix(botUser, prefix, out int argPos))
                 return;
-
+            
             var context = new CommandContext(this.discordClient, userMessage);
 
             _ = await this.commandService.ExecuteAsync(context, argPos, this.serviceProvider)
                 .ConfigureAwait(false);
         }
 
-        private Task CommandExecuted(Optional<CommandInfo> commandInfo, ICommandContext commandContext, IResult result)
+        private Task CommandExecuted(Optional<CommandInfo> commandInfo,
+            ICommandContext commandContext, IResult result)
         {
             if (result.IsSuccess)
                 this.LogSuccessfulCommand(commandInfo.Value, commandContext);
@@ -116,11 +116,13 @@ namespace Gruggbot
 
             using (this.logger.BeginScope(logContext))
             {
-                this.logger.LogInformation(template, logContext["module"], logContext["commandName"]);
+                this.logger.LogInformation(template, logContext["module"],
+                    logContext["commandName"]);
             }
         }
 
-        private void LogUnsuccessfulCommand(CommandInfo commandInfo, ICommandContext commandContext, IResult result)
+        private void LogUnsuccessfulCommand(CommandInfo commandInfo, ICommandContext commandContext,
+            IResult result)
         {
             var template = "Error Processing Command: {module}->{commandName}";
 

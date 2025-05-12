@@ -2,10 +2,12 @@
 // Copyright © 2020 Ryan Blackmore. All rights Reserved.
 // </copyright>
 
+using Discord;
+using Discord.Interactions;
+
 namespace Gruggbot.DependencyInjection
 {
     using System;
-
     using Discord.Commands;
     using Discord.WebSocket;
     using Gruggbot.CommandModules;
@@ -16,18 +18,26 @@ namespace Gruggbot.DependencyInjection
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddBot(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddBot(this IServiceCollection services,
+            IConfiguration configuration)
         {
             if (configuration == null)
                 throw new ArgumentNullException(nameof(configuration));
 
+            var config = new DiscordSocketConfig()
+            {
+                GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+            };
+
+            services.AddSingleton(config);
             services.AddSingleton<DiscordSocketClient>();
             services.ConfigureAndAddCommandServices(configuration);
 
             services.Configure<BotConfiguration>(configuration.GetSection(BotConfiguration.Bot));
             services.AddHostedService<BotApp>();
 
-            services.Configure<RandomMessagesConfiguration>(configuration.GetSection(RandomMessagesConfiguration.RandomMessages));
+            services.Configure<RandomMessagesConfiguration>(
+                configuration.GetSection(RandomMessagesConfiguration.RandomMessages));
             services.AddSingleton<RandomMessages>();
 
             services.AddTransient<ShadowlandsCountdownProvider>();
@@ -35,7 +45,8 @@ namespace Gruggbot.DependencyInjection
             return services;
         }
 
-        private static IServiceCollection ConfigureAndAddCommandServices(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection ConfigureAndAddCommandServices(
+            this IServiceCollection services, IConfiguration configuration)
         {
             var commandConfig = configuration
                 .GetSection(CommandHandlerConfiguration.CommandServiceConfig)

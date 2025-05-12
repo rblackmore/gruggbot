@@ -9,7 +9,8 @@ namespace Gruggbot.Extensions
 
     public static class SocketMessageExtensions
     {
-        internal static bool TryCastSocketUserMessage(this SocketMessage message, out SocketUserMessage userMessage)
+        internal static bool TryCastSocketUserMessage(this SocketMessage message,
+            out SocketUserMessage userMessage)
         {
             bool isUserMessage = false;
 
@@ -32,7 +33,8 @@ namespace Gruggbot.Extensions
             return false;
         }
 
-        internal static bool HasPrefix(this SocketUserMessage userMessage, SocketUser user, char prefix, out int argPos)
+        internal static bool HasPrefix(this SocketUserMessage userMessage, SocketUser user,
+            char prefix, out int argPos)
         {
             argPos = -1;
 
