@@ -22,7 +22,7 @@ jobs:
       run: echo "TIMESTAMP=$(date +%s)" >> $GITHUB_ENV
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag gruggo/gruggbot:${TIMESTAMP}
+      run: docker build . --file Execute/GruggbotBootstrapper/Dockerfile --tag gruggo/gruggbot:${TIMESTAMP}
 
     - name: Push the Docker Image
       run: docker push gruggo/gruggbot:${TIMESTAMP}
