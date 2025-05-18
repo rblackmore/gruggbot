@@ -6,7 +6,7 @@
       "companyName": "Ryan Blackmore",
       "copyrightText": "<copyright file=\"{fileName}\" company=\"{companyName}\">.\nCopyright © {year} {companyName}. All rights Reserved.\n</copyright>",
       "variables": {
-        "year": "2020"
+        "year": "2025"
       }
     },
     "orderingRules": {
@@ -15,10 +15,10 @@
       "systemUsingDirectivesFirst": true,
       "elementOrder": [
         "kind",
-        "accessibility",
+        "static",
         "constant",
-        "readonly",
-        "static"
+        "accessibility",
+        "readonly"
       ]
     }
   }

@@ -7,51 +7,27 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile></DocumentationFile>
-    <OutputPath></OutputPath>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath></OutputPath>
-  </PropertyGroup>
   <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json" Link="stylecop.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Settings\appsettings.json" Link="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+    <None Include="..\..\.editorconfig" Link=".editorconfig"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
-    <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.1" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-    <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.4"/>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.4"/>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2"/>
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0"/>
+    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.1"/>
+    <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+    <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\Gruggbot.Core\Gruggbot.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="appsettings.Development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="appsettings.Production.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\..\Core\Gruggbot.Core\Gruggbot.Core.csproj"/>
+    <Content Include="..\..\.dockerignore">
+      <Link>.dockerignore</Link>
+    </Content>
   </ItemGroup>
 </Project>

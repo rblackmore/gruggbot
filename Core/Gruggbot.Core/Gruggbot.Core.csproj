@@ -6,6 +6,7 @@
         <RootNamespace>Gruggbot</RootNamespace>
         <AssemblyName>Gruggbot.Core</AssemblyName>
         <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <UserSecretsId>c25e54b0-21ad-4d59-8d2e-b965eca65884</UserSecretsId>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

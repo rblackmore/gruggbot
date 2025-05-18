@@ -7,7 +7,6 @@ namespace GruggbotBootstrapper
     using System;
     using System.IO;
     using System.Threading.Tasks;
-
     using Gruggbot.DependencyInjection;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Hosting;
@@ -20,7 +19,7 @@ namespace GruggbotBootstrapper
             try
             {
                 ConfigureLogging();
-
+                
                 await CreateHostBuilder(args).Build().RunAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -58,7 +57,8 @@ namespace GruggbotBootstrapper
 
         public static void ConfigureLogging()
         {
-            var config = CreateConfigurationBuilder().Build();
+            var builder = CreateConfigurationBuilder();
+            var config = builder.Build();
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
